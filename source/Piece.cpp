@@ -4,11 +4,11 @@
 
 #include "../header/Piece.h"
 
-Piece::Piece(int rotation, int currentShapeInt, Point shapes[4][4]) : rotation(rotation), currentShapeInt(currentShapeInt) {
+Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shapes[4][4]) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
     this->piecePosition.setPos(4, 0);
 
-    tileSet.loadFromFile("tileset.png", sf::IntRect(32 * currentShapeInt, 0, 32, 32));
+    tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
         tileSprite[i].setTexture(tileSet);
@@ -65,19 +65,18 @@ void Piece::setPiecePosition() {
     Piece::setPiecePosition(this->piecePosition.getX(), this->piecePosition.getY());
 }
 
-
 void Piece::rotateLeft() {
-    int nextRotation = (this->rotation + 1) % 4;
+    int nextRotation = this->rotation - 1;
+    if (nextRotation < 0) {
+        nextRotation = 3;
+    }
     setRotation(nextRotation);
     setCurrentShape();
     setPiecePosition(this->getPiecePosition());
 }
 
 void Piece::rotateRight() {
-    int nextRotation = this->rotation - 1;
-    if (nextRotation < 0) {
-        nextRotation = 3;
-    }
+    int nextRotation = (this->rotation + 1) % 4;
     setRotation(nextRotation);
     setCurrentShape();
     setPiecePosition(this->getPiecePosition());

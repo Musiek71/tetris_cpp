@@ -3,6 +3,7 @@
 //
 
 #include "../header/IPiece.h"
+#include "../header/PieceEnum.h"
 
 Point IPiece::punkty[4][4] = {
         {
@@ -19,4 +20,4 @@ Point IPiece::punkty[4][4] = {
         }
 };
 
-IPiece::IPiece(int rotation, int currentShapeInt) : Piece(rotation, currentShapeInt, punkty) {}
+IPiece::IPiece(int rotation) : Piece(rotation, IP, punkty) {}

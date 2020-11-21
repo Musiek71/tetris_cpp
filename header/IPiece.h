@@ -12,7 +12,7 @@
 class IPiece : public Piece {
     static Point punkty[4][4];
 public:
-    IPiece(int rotation, int currentShapeInt);
+    IPiece(int rotation);
 };
 
 

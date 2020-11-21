@@ -3,14 +3,19 @@
 #include "../header/Point.h"
 #include "../header/Piece.h"
 #include "../header/IPiece.h"
-#include "../header/PieceEnum.h"
+#include "../header/LPiece.h"
+#include "../header/OPiece.h"
+#include "../header/SPiece.h"
+#include "../header/ZPiece.h"
+#include "../header/TPiece.h"
+
 
 int main() {
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    IPiece iPiece(0, IP);
+    TPiece iPiece(0);
 
 
     while (window.isOpen()) {

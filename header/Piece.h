@@ -32,6 +32,8 @@ public:
 
     int getRotation() const;
 
+    int getCurrentShapeInt() const;
+
     void setRotation(int rotation);
 
     const Point getPiecePosition() const;

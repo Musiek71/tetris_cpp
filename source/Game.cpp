@@ -14,11 +14,17 @@ bool Game::run() {
 
     Piece* currentPiece = pieceFactory.getPiece();
 
+    bool gameOver = false;
+
     sf::Clock clock;
     sf::Time time = clock.getElapsedTime();
 
 
     while (window.isOpen()) {
+
+        if (gameOver) {
+            break;
+        }
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -52,7 +58,12 @@ bool Game::run() {
         if (time.asSeconds() > 0.5) {
             clock.restart();
             if (!fallDown(currentPiece)) {
-//                gameBoard.add(currentPiece);
+                gameOver = gameBoard.add(currentPiece);
+
+                delete currentPiece;
+                currentPiece = pieceFactory.getPiece();
+
+                //gameBoard.update();
             }
 
         }

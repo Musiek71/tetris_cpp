@@ -64,3 +64,23 @@ bool Board::collidesWith(int x, int y, Point *shape) {
     }
     return false;
 }
+
+bool Board::add(Piece *piece) {
+    for (int i = 0; i < 4; i++) {
+        if (piece->getPiecePosition().getY() + piece->getCurrentShape()[i].getY() < 3)
+            return true;
+        board[piece->getPiecePosition().getX() + piece->getCurrentShape()[i].getX()][piece->getPiecePosition().getY() + piece->getCurrentShape()[i].getY()] = piece->getCurrentShapeInt();
+        updateTexture(piece->getPiecePosition(), piece->getCurrentShape()[i], piece->getCurrentShapeInt(), 32);
+    }
+    return false;
+}
+
+void Board::updateTexture(Point piecePos, Point shapePoint, int tileNumber, int tileSize) {
+    sf::Vertex* quad = &vertices[(piecePos.getX() + shapePoint.getX() + (piecePos.getY() + shapePoint.getY())* BOARD_WIDTH) * 4];
+    quad[0].texCoords = sf::Vector2f(tileNumber * tileSize, 0);
+    quad[1].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, 0);
+    quad[2].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, tileSize);
+    quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
+}
+
+

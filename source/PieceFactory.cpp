@@ -12,6 +12,7 @@
 #include "../header/OPiece.h"
 #include "../header/TPiece.h"
 #include "../header/SPiece.h"
+#include "../header/ZPiece.h"
 
 PieceFactory::PieceFactory() {
     fillVector();
@@ -56,7 +57,7 @@ Piece* PieceFactory::getPiece() {
             ptr = new TPiece("tileset.png", 0);
             break;
         case 8:
-            ptr = new JPiece("tileset.png", 0);
+            ptr = new ZPiece("tileset.png", 0);
             break;
     }
 

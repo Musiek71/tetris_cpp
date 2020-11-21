@@ -108,3 +108,7 @@ Point *Piece::getRightRotationShape() {
     return this->shapes[nextRotation];
 }
 
+int Piece::getCurrentShapeInt() const {
+    return currentShapeInt;
+}
+

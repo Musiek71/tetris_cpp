@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include "../header/PieceEnum.h"
 #include "Point.h"
+#include "Piece.h"
 
 #define BOARD_WIDTH 12
 #define BOARD_HEIGHT 24
@@ -28,6 +29,9 @@ public:
 
     bool collidesWith(int x, int y, Point* shape);
 
+    bool add(Piece *piece);
+
+    void updateTexture(Point piecePos, Point shapePoint, int currentShapeInt, int tileSize);
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

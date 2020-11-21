@@ -6,7 +6,7 @@
 
 Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shapes[4][4]) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
-    this->piecePosition.setPos(4, 0);
+    this->piecePosition.setPos(4, -3);
 
     //DEBUG
     int loaded = tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
@@ -40,6 +40,7 @@ void Piece::setCurrentShape() {
 void Piece::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     for (int i = 0; i < 4; i++) {
+
         target.draw(tileSprite[i], states);
     }
 }

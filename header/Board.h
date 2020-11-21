@@ -12,15 +12,17 @@
 #include "Piece.h"
 
 #define BOARD_WIDTH 12
-#define BOARD_HEIGHT 24
+#define BOARD_HEIGHT 21
 
 class Board : public sf::Drawable, sf::Transformable {
 private:
     int board[BOARD_WIDTH][BOARD_HEIGHT];
 
-
     sf::Texture tileSet;
     sf::VertexArray vertices;
+
+    void updateTexture(Point piecePos, Point shapePoint, int currentShapeInt, int tileSize);
+    void updateAllTextures(int tileSize);
 
 public:
     Board();
@@ -31,7 +33,9 @@ public:
 
     bool add(Piece *piece);
 
-    void updateTexture(Point piecePos, Point shapePoint, int currentShapeInt, int tileSize);
+    int updateBoard();
+
+    void pushRowDown(int row);
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

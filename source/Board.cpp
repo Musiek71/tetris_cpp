@@ -83,4 +83,53 @@ void Board::updateTexture(Point piecePos, Point shapePoint, int tileNumber, int 
     quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
 }
 
+int Board::updateBoard() {
+    bool foundFullRow = true;
+    int lineCounter = 0;
 
+    for (int y = BOARD_HEIGHT - 2; y > 0; y--) {
+        foundFullRow = true;
+        for (int x = 1; x < BOARD_WIDTH - 1; x++) {
+            if (board[x][y] == 0)
+                foundFullRow = false;
+        }
+        if (foundFullRow) {
+            pushRowDown(y);
+            lineCounter++;
+            y++;
+        }
+    }
+}
+
+void Board::pushRowDown(int row) {
+    for (int y = row; y > 0; y--) {
+        for (int x = 1; x < BOARD_WIDTH - 1; x++) {
+            board[x][y] = board[x][y - 1];
+            updateAllTextures(32);
+        }
+    }
+}
+
+void Board::updateAllTextures(int tileSize) {
+    for (int i = 0; i < BOARD_WIDTH; i++) {
+        for (int j = 0; j < BOARD_HEIGHT; j++) {
+            //get the tileNumber
+            int tileNumber = board[i][j];
+
+            //get the pointer to the current quad
+            sf::Vertex* quad = &vertices[(i + j * BOARD_WIDTH) * 4];
+
+            //define its 4 corners
+            quad[0].position = sf::Vector2f(i * tileSize, j * tileSize);
+            quad[1].position = sf::Vector2f((i + 1) * tileSize, j * tileSize);
+            quad[2].position = sf::Vector2f((i + 1) * tileSize, (j + 1) * tileSize);
+            quad[3].position = sf::Vector2f(i * tileSize, (j + 1) * tileSize);
+
+            //define its 4 texture coordinates
+            quad[0].texCoords = sf::Vector2f(tileNumber * tileSize, 0);
+            quad[1].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, 0);
+            quad[2].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, tileSize);
+            quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
+        }
+    }
+}

@@ -15,6 +15,8 @@ bool Game::run() {
     Piece* currentPiece = pieceFactory.getPiece();
 
     bool gameOver = false;
+    bool deltaFlag = false;
+    float deltaTime = 0;
 
     sf::Clock clock;
     sf::Time time = clock.getElapsedTime();
@@ -47,6 +49,7 @@ bool Game::run() {
                 else if (event.key.code == sf::Keyboard::X)
                     rotateRight(currentPiece);
             }
+            clock.restart();
         }
 
         window.clear();
@@ -55,7 +58,7 @@ bool Game::run() {
         window.display();
 
         time = clock.getElapsedTime();
-        if (time.asSeconds() > 0.5) {
+        if (time.asSeconds() - deltaTime > 0.5) {
             clock.restart();
             if (!fallDown(currentPiece)) {
                 gameOver = gameBoard.add(currentPiece);
@@ -63,7 +66,9 @@ bool Game::run() {
                 delete currentPiece;
                 currentPiece = pieceFactory.getPiece();
 
-                //gameBoard.update();
+                int clearedRows = gameBoard.updateBoard();
+
+                //TODO score updating here i guess
             }
 
         }
@@ -75,10 +80,14 @@ bool Game::run() {
 Game::Game() {}
 
 bool Game::moveLeft(Piece *piece) {
-    if (!gameBoard.collidesWith(piece->getPiecePosition().getX() - 1,
-                                piece->getPiecePosition().getY(),
-                                piece->getCurrentShape())
-                                ) {
+    if (!gameBoard.collidesWith(
+            piece->getPiecePosition().getX() - 1,
+            piece->getPiecePosition().getY(),
+            piece->getCurrentShape()) ||
+            (piece->getPiecePosition().getY() < 0 &&
+            piece->getPiecePosition().getX() > 1 &&
+            piece->getPiecePosition().getX() < BOARD_WIDTH - 1)
+            ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() - 1, piece->getPiecePosition().getY());
         return true;
     }
@@ -86,9 +95,13 @@ bool Game::moveLeft(Piece *piece) {
 }
 
 bool Game::moveRight(Piece *piece) {
-    if (!gameBoard.collidesWith(piece->getPiecePosition().getX() + 1,
-                                piece->getPiecePosition().getY(),
-                                piece->getCurrentShape())
+    if (!gameBoard.collidesWith(
+            piece->getPiecePosition().getX() + 1,
+            piece->getPiecePosition().getY(),
+            piece->getCurrentShape()) ||
+            (piece->getPiecePosition().getY() < 0 &&
+            piece->getPiecePosition().getX() > 1 &&
+            piece->getPiecePosition().getX() < BOARD_WIDTH - 1)
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() + 1, piece->getPiecePosition().getY());
         return true;
@@ -97,9 +110,11 @@ bool Game::moveRight(Piece *piece) {
 }
 
 bool Game::rotateLeft(Piece *piece) {
-    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
-                                piece->getPiecePosition().getY(),
-                                piece->getLeftRotationShape())
+    if (!gameBoard.collidesWith(
+            piece->getPiecePosition().getX(),
+            piece->getPiecePosition().getY(),
+            piece->getLeftRotationShape()) ||
+            piece->getPiecePosition().getY() < 0
             ) {
         piece->rotateLeft();
         return true;
@@ -108,9 +123,11 @@ bool Game::rotateLeft(Piece *piece) {
 }
 
 bool Game::rotateRight(Piece *piece) {
-    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
-                                piece->getPiecePosition().getY(),
-                                piece->getRightRotationShape())
+    if (!gameBoard.collidesWith(
+            piece->getPiecePosition().getX(),
+            piece->getPiecePosition().getY(),
+            piece->getRightRotationShape()) ||
+            piece->getPiecePosition().getY() < 0
             ) {
         piece->rotateRight();
         return true;
@@ -119,9 +136,11 @@ bool Game::rotateRight(Piece *piece) {
 }
 
 bool Game::fallDown(Piece *piece) {
-    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
-                                piece->getPiecePosition().getY() + 1,
-                                piece->getCurrentShape())
+    if (!gameBoard.collidesWith(
+            piece->getPiecePosition().getX(),
+            piece->getPiecePosition().getY() + 1,
+            piece->getCurrentShape()) ||
+            piece->getPiecePosition().getY() < 0
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX(), piece->getPiecePosition().getY() + 1);
         return true;

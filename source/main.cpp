@@ -8,6 +8,7 @@
 #include "../header/SPiece.h"
 #include "../header/ZPiece.h"
 #include "../header/TPiece.h"
+#include "../header/Board.h"
 
 
 int main() {
@@ -15,7 +16,12 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    TPiece iPiece(0);
+    LPiece iPiece("tileset.png", 0);
+    Board board;
+    board.init("tileset.png", 32);
+
+    sf::Clock clock;
+    float lastTime = 0;
 
 
     while (window.isOpen()) {
@@ -57,8 +63,14 @@ int main() {
         }
 
         window.clear();
+        window.draw(board);
         window.draw(iPiece);
         window.display();
+
+        float currentTime = clock.restart().asSeconds();
+        float fps = 1.f / currentTime;
+        std::cout << fps << std::endl;
+        lastTime = currentTime;
     }
 
 

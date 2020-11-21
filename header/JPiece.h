@@ -12,7 +12,7 @@
 class JPiece : public Piece {
     static Point punkty[4][4];
 public:
-    JPiece(int rotation);
+    JPiece(std::string tileset, int rotation);
 };
 
 

@@ -12,7 +12,7 @@
 class ZPiece : public Piece {
     static Point punkty[4][4];
 public:
-    ZPiece(int rotation);
+    ZPiece(std::string tileset, int rotation);
 };
 
 

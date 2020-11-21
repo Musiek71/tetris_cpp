@@ -20,4 +20,4 @@ Point ZPiece::punkty[4][4] = {
         }
 };
 
-ZPiece::ZPiece(int rotation) : Piece(rotation, ZP, punkty) {}
+ZPiece::ZPiece(std::string tileset, int rotation) : Piece(tileset, rotation, ZP, punkty) {}

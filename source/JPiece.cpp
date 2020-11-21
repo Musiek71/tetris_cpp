@@ -20,4 +20,4 @@ Point JPiece::punkty[4][4] = {
         }
 };
 
-JPiece::JPiece(int rotation) : Piece(rotation, JP, punkty) {}
+JPiece::JPiece(std::string tileset, int rotation) : Piece(tileset, rotation, JP, punkty) {}

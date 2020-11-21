@@ -24,7 +24,7 @@ public:
     Board();
 
     bool init(std::string tileset, int tileSize);
-    
+
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

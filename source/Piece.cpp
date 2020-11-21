@@ -8,7 +8,8 @@ Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shape
     setShapes(shapes);
     this->piecePosition.setPos(4, 0);
 
-    tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
+    //DEBUG
+    int loaded = tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
         tileSprite[i].setTexture(tileSet);

@@ -3,8 +3,6 @@
 //
 
 #include "../header/Game.h"
-#include "../header/LPiece.h"
-#include "../header/OPiece.h"
 #include <iostream>
 
 bool Game::run() {
@@ -14,11 +12,10 @@ bool Game::run() {
     if (!gameBoard.init("tileset.png", 32))
         return false;
 
-    Piece& currentPiece = pieceFactory.getPiece();
-
+    Piece* currentPiece = pieceFactory.getPiece();
 
     sf::Clock clock;
-    float lastTime = 0;
+    sf::Time time = clock.getElapsedTime();
 
 
     while (window.isOpen()) {
@@ -32,45 +29,95 @@ bool Game::run() {
             {
                 //todo jedna funkcja
                 if (event.key.code == sf::Keyboard::Left)
-                    currentPiece.setPiecePosition(currentPiece.getPiecePosition().getX() - 1, currentPiece.getPiecePosition().getY());
+                    moveLeft(currentPiece);
                 else if (event.key.code == sf::Keyboard::Right)
-                    currentPiece.setPiecePosition(currentPiece.getPiecePosition().getX() + 1, currentPiece.getPiecePosition().getY());
+                    moveRight(currentPiece);
                 else if (event.key.code == sf::Keyboard::Up)
-                    currentPiece.setPiecePosition(currentPiece.getPiecePosition().getX(), currentPiece.getPiecePosition().getY() - 1);
+                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() - 1);
                 else if (event.key.code == sf::Keyboard::Down)
-                    currentPiece.setPiecePosition(currentPiece.getPiecePosition().getX(), currentPiece.getPiecePosition().getY() + 1);
+                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() + 1);
                 else if (event.key.code == sf::Keyboard::Z)
-                    currentPiece.rotateLeft();
+                    rotateLeft(currentPiece);
                 else if (event.key.code == sf::Keyboard::X)
-                    currentPiece.rotateRight();
-                else if (event.key.code == sf::Keyboard::C) {
-                    Point* nextRot = currentPiece.getLeftRotationShape();
-                    for (int i = 0; i < 4; i++) {
-                        nextRot[i].print();
-                    }
-                } else if (event.key.code == sf::Keyboard::V) {
-                    Point* nextRot = currentPiece.getRightRotationShape();
-                    for (int i = 0; i < 4; i++) {
-                        nextRot[i].print();
-                    }
-                }
-
+                    rotateRight(currentPiece);
             }
-
         }
 
         window.clear();
         window.draw(gameBoard);
-        window.draw(currentPiece);
+        window.draw(*currentPiece);
         window.display();
 
-        float currentTime = clock.restart().asSeconds();
-        float fps = 1.f / currentTime;
-        //std::cout << fps << std::endl;
-        lastTime = currentTime;
+        time = clock.getElapsedTime();
+        if (time.asSeconds() > 0.5) {
+            clock.restart();
+            if (!fallDown(currentPiece)) {
+//                gameBoard.add(currentPiece);
+            }
+
+        }
     }
 
     return true;
 }
 
 Game::Game() {}
+
+bool Game::moveLeft(Piece *piece) {
+    if (!gameBoard.collidesWith(piece->getPiecePosition().getX() - 1,
+                                piece->getPiecePosition().getY(),
+                                piece->getCurrentShape())
+                                ) {
+        piece->setPiecePosition(piece->getPiecePosition().getX() - 1, piece->getPiecePosition().getY());
+        return true;
+    }
+    return false;
+}
+
+bool Game::moveRight(Piece *piece) {
+    if (!gameBoard.collidesWith(piece->getPiecePosition().getX() + 1,
+                                piece->getPiecePosition().getY(),
+                                piece->getCurrentShape())
+            ) {
+        piece->setPiecePosition(piece->getPiecePosition().getX() + 1, piece->getPiecePosition().getY());
+        return true;
+    }
+    return false;
+}
+
+bool Game::rotateLeft(Piece *piece) {
+    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
+                                piece->getPiecePosition().getY(),
+                                piece->getLeftRotationShape())
+            ) {
+        piece->rotateLeft();
+        return true;
+    }
+    return false;
+}
+
+bool Game::rotateRight(Piece *piece) {
+    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
+                                piece->getPiecePosition().getY(),
+                                piece->getRightRotationShape())
+            ) {
+        piece->rotateRight();
+        return true;
+    }
+    return false;
+}
+
+bool Game::fallDown(Piece *piece) {
+    if (!gameBoard.collidesWith(piece->getPiecePosition().getX(),
+                                piece->getPiecePosition().getY() + 1,
+                                piece->getCurrentShape())
+            ) {
+        piece->setPiecePosition(piece->getPiecePosition().getX(), piece->getPiecePosition().getY() + 1);
+        return true;
+    }
+    return false;
+}
+
+
+
+

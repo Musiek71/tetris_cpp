@@ -55,3 +55,12 @@ Board::Board() {
         }
     }
 }
+
+bool Board::collidesWith(int x, int y, Point *shape) {
+    for (int i = 0; i < 4; i++) {
+        if (this->board[x + shape[i].getX()][y + shape[i].getY()] != 0) {
+            return true;
+        }
+    }
+    return false;
+}

@@ -91,6 +91,10 @@ void Piece::setRotation(int rotation) {
     Piece::rotation = rotation;
 }
 
+Point *Piece::getCurrentShape() {
+    return this->shape;
+}
+
 Point *Piece::getLeftRotationShape() {
     int nextRotation = (this->rotation + 1) % 4;
     return this->shapes[nextRotation];
@@ -103,3 +107,4 @@ Point *Piece::getRightRotationShape() {
     }
     return this->shapes[nextRotation];
 }
+

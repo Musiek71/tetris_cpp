@@ -30,7 +30,7 @@ void PieceFactory::fillVector() {
     std::shuffle(this->pieceVector.begin(), this->pieceVector.end(), std::default_random_engine(seed));
 }
 
-Piece &PieceFactory::getPiece() {
+Piece* PieceFactory::getPiece() {
     if (pieceVector.size() == 0)
         fillVector();
     int random = pieceVector[0];
@@ -60,6 +60,5 @@ Piece &PieceFactory::getPiece() {
             break;
     }
 
-    Piece& ref = *ptr;
-    return ref;
+    return ptr;
 }

@@ -16,7 +16,7 @@ class PieceFactory {
 public:
     PieceFactory();
 
-    Piece& getPiece();
+    Piece* getPiece();
 
 };
 

@@ -8,6 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "../header/PieceEnum.h"
+#include "Point.h"
 
 #define BOARD_WIDTH 12
 #define BOARD_HEIGHT 24
@@ -24,6 +25,8 @@ public:
     Board();
 
     bool init(std::string tileset, int tileSize);
+
+    bool collidesWith(int x, int y, Point* shape);
 
 
 protected:

@@ -13,13 +13,20 @@
 
 
 class Game {
+private:
     PieceFactory pieceFactory;
     Board gameBoard;
+    bool moveLeft(Piece* piece);
+    bool moveRight(Piece* piece);
+    bool rotateLeft(Piece* piece);
+    bool rotateRight(Piece* piece);
+    bool fallDown(Piece *piece);
 
 public:
+    Game();
+
     bool run();
 
-    Game();
 };
 
 

@@ -43,6 +43,7 @@ public:
     void rotateLeft();
     void rotateRight();
 
+    Point* getCurrentShape();
     Point* getLeftRotationShape();
     Point* getRightRotationShape();
 };

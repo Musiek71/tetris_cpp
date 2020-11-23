@@ -9,8 +9,17 @@
 #include <SFML/Graphics.hpp>
 #include "Point.h"
 
+#define DEFAULT_X 4
+#define DEFAULT_Y 0
+
+/**
+ * Default Piece class representing a single tetromino
+ */
 class Piece : public sf::Drawable, public sf::Transformable {
 private:
+    /**
+     * Current piece position
+     */
     Point piecePosition;
     int rotation{0};
     int currentShapeInt{0};

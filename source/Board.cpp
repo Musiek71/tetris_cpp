@@ -2,11 +2,15 @@
 // Created by musiek on 11/21/20.
 //
 
+#include <iostream>
 #include "../header/Board.h"
 
 bool Board::init(std::string tileset, int tileSize) {
     if (!tileSet.loadFromFile(tileset))
         return false;
+
+    //set offset
+    this->setPosition(0, -Y_OFFSET);
 
     //resize the vertex array
     vertices.setPrimitiveType(sf::Quads);

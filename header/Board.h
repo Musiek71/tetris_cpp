@@ -11,8 +11,10 @@
 #include "Point.h"
 #include "Piece.h"
 
+
 #define BOARD_WIDTH 12
-#define BOARD_HEIGHT 21
+#define BOARD_HEIGHT 24
+#define Y_OFFSET 32 * 3
 
 class Board : public sf::Drawable, sf::Transformable {
 private:

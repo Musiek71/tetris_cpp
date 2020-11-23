@@ -12,11 +12,20 @@ bool Game::run() {
     if (!gameBoard.init("tileset.png", 32))
         return false;
 
+    sf::Texture backgroundText;
+    backgroundText.loadFromFile("background.png");
+    sf::Sprite background;
+    background.setTexture(backgroundText);
+
     Piece* currentPiece = pieceFactory.getPiece();
+    Piece* nextPiece = pieceFactory.getPiece();
+    nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
 
     bool gameOver = false;
     bool deltaFlag = false;
     float deltaTime = 0;
+    int score = 0;
+    int totalRows = 0;
 
     sf::Clock clock;
     sf::Time time = clock.getElapsedTime();
@@ -43,18 +52,19 @@ bool Game::run() {
                 else if (event.key.code == sf::Keyboard::Up)
                     (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() - 1);
                 else if (event.key.code == sf::Keyboard::Down)
-                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() + 1);
+                    fallDown(currentPiece);
                 else if (event.key.code == sf::Keyboard::Z)
                     rotateLeft(currentPiece);
                 else if (event.key.code == sf::Keyboard::X)
                     rotateRight(currentPiece);
             }
-            clock.restart();
         }
 
         window.clear();
+        window.draw(background);
         window.draw(gameBoard);
         window.draw(*currentPiece);
+        window.draw(*nextPiece);
         window.display();
 
         time = clock.getElapsedTime();
@@ -64,9 +74,16 @@ bool Game::run() {
                 gameOver = gameBoard.add(currentPiece);
 
                 delete currentPiece;
-                currentPiece = pieceFactory.getPiece();
+
+                //swap pieces
+                //TODO make it a separate function
+                currentPiece = nextPiece;
+                currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
+                nextPiece = pieceFactory.getPiece();
+                nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
 
                 int clearedRows = gameBoard.updateBoard();
+                totalRows += clearedRows;
 
                 //TODO score updating here i guess
             }
@@ -83,10 +100,7 @@ bool Game::moveLeft(Piece *piece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX() - 1,
             piece->getPiecePosition().getY(),
-            piece->getCurrentShape()) ||
-            (piece->getPiecePosition().getY() < 0 &&
-            piece->getPiecePosition().getX() > 1 &&
-            piece->getPiecePosition().getX() < BOARD_WIDTH - 1)
+            piece->getCurrentShape())
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() - 1, piece->getPiecePosition().getY());
         return true;
@@ -98,10 +112,7 @@ bool Game::moveRight(Piece *piece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX() + 1,
             piece->getPiecePosition().getY(),
-            piece->getCurrentShape()) ||
-            (piece->getPiecePosition().getY() < 0 &&
-            piece->getPiecePosition().getX() > 1 &&
-            piece->getPiecePosition().getX() < BOARD_WIDTH - 1)
+            piece->getCurrentShape())
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() + 1, piece->getPiecePosition().getY());
         return true;
@@ -113,8 +124,7 @@ bool Game::rotateLeft(Piece *piece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
-            piece->getLeftRotationShape()) ||
-            piece->getPiecePosition().getY() < 0
+            piece->getLeftRotationShape())
             ) {
         piece->rotateLeft();
         return true;
@@ -126,8 +136,7 @@ bool Game::rotateRight(Piece *piece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
-            piece->getRightRotationShape()) ||
-            piece->getPiecePosition().getY() < 0
+            piece->getRightRotationShape())
             ) {
         piece->rotateRight();
         return true;
@@ -139,8 +148,7 @@ bool Game::fallDown(Piece *piece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY() + 1,
-            piece->getCurrentShape()) ||
-            piece->getPiecePosition().getY() < 0
+            piece->getCurrentShape())
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX(), piece->getPiecePosition().getY() + 1);
         return true;

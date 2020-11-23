@@ -3,18 +3,18 @@
 //
 
 #include "../header/Piece.h"
+#include "../header/Board.h"
 
 Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shapes[4][4]) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
-    this->piecePosition.setPos(4, -3);
+    this->piecePosition.setPos(DEFAULT_X, DEFAULT_Y);
 
-    //DEBUG
     int loaded = tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
         tileSprite[i].setTexture(tileSet);
         tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32,
-                                  (piecePosition.getY() + shape[i].getY()) * 32
+                                  (piecePosition.getY() + shape[i].getY()) * 32 - Y_OFFSET
         );
     }
 
@@ -40,7 +40,7 @@ void Piece::setCurrentShape() {
 void Piece::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     for (int i = 0; i < 4; i++) {
-
+        //if (tileSprite[i].getPosition().y >= 32) code for drawing the window lower
         target.draw(tileSprite[i], states);
     }
 }
@@ -54,7 +54,7 @@ void Piece::setPiecePosition(int x, int y) {
     Piece::piecePosition.setY(y);
     for (int i = 0; i < 4; i++) {
         tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32,
-                                  (piecePosition.getY() + shape[i].getY()) * 32
+                                  (piecePosition.getY() + shape[i].getY()) * 32 - Y_OFFSET
         );
     }
 }

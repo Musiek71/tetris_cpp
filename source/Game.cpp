@@ -17,10 +17,17 @@ bool Game::run() {
     sf::Sprite background;
     background.setTexture(backgroundText);
 
+//    sf::Texture nextFieldText;
+//    nextFieldText.loadFromFile("next_field.png");
+//    sf::Sprite nextField;
+//    nextField.setTexture(nextFieldText);
+//    nextField.setPosition(16 * 32, 8 * 32);
+
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
-    nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
-//    Piece* ghostPiece =
+    nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 2, 10, false);
+    Piece* ghostPiece = pieceFactory.getGhostPiece(currentPiece);
+    setGhostPosition(currentPiece, ghostPiece);
 
 
     bool deltaFlag = false;
@@ -45,25 +52,27 @@ bool Game::run() {
             {
                 //todo jedna funkcja
                 if (event.key.code == sf::Keyboard::Left)
-                    moveLeft(currentPiece);
+                    moveLeft(currentPiece, ghostPiece);
                 else if (event.key.code == sf::Keyboard::Right)
-                    moveRight(currentPiece);
-                else if (event.key.code == sf::Keyboard::Up)
-                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() - 1);
+                    moveRight(currentPiece, ghostPiece);
+//                else if (event.key.code == sf::Keyboard::Up)
+//                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() - 1);
                 else if (event.key.code == sf::Keyboard::Down)
                     fallDown(currentPiece);
                 else if (event.key.code == sf::Keyboard::Z)
-                    rotateLeft(currentPiece);
+                    rotateLeft(currentPiece, ghostPiece);
                 else if (event.key.code == sf::Keyboard::X)
-                    rotateRight(currentPiece);
+                    rotateRight(currentPiece, ghostPiece);
             }
         }
 
         window.clear();
         window.draw(background);
+//        window.draw(nextField);
         window.draw(gameBoard);
         window.draw(*currentPiece);
         window.draw(*nextPiece);
+        window.draw(*ghostPiece);
         window.display();
 
         time = clock.getElapsedTime();
@@ -73,13 +82,17 @@ bool Game::run() {
                 gameOver = gameBoard.add(currentPiece);
 
                 delete currentPiece;
+                delete ghostPiece;
 
                 //swap pieces
                 currentPiece = nextPiece;
                 currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
                 //get new piece as the next piece
                 nextPiece = pieceFactory.getPiece();
-                nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
+                nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 2, 10, false);
+                //get new ghost piece and update it's position
+                ghostPiece = pieceFactory.getGhostPiece(currentPiece);
+                setGhostPosition(currentPiece, ghostPiece);
 
                 //getting number of cleared rows
                 int clearedRows = gameBoard.updateBoard();
@@ -101,49 +114,53 @@ bool Game::run() {
 
 Game::Game() {}
 
-bool Game::moveLeft(Piece *piece) {
+bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX() - 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() - 1, piece->getPiecePosition().getY());
+        setGhostPosition(piece, ghostPiece);
         return true;
     }
     return false;
 }
 
-bool Game::moveRight(Piece *piece) {
+bool Game::moveRight(Piece *piece, Piece* ghostPiece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX() + 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
             ) {
         piece->setPiecePosition(piece->getPiecePosition().getX() + 1, piece->getPiecePosition().getY());
+        setGhostPosition(piece, ghostPiece);
         return true;
     }
     return false;
 }
 
-bool Game::rotateLeft(Piece *piece) {
+bool Game::rotateLeft(Piece *piece, Piece* ghostPiece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getLeftRotationShape())
             ) {
         piece->rotateLeft();
+        setGhostPosition(piece, ghostPiece);
         return true;
     }
     return false;
 }
 
-bool Game::rotateRight(Piece *piece) {
+bool Game::rotateRight(Piece *piece, Piece* ghostPiece) {
     if (!gameBoard.collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getRightRotationShape())
             ) {
         piece->rotateRight();
+        setGhostPosition(piece, ghostPiece);
         return true;
     }
     return false;
@@ -161,14 +178,15 @@ bool Game::fallDown(Piece *piece) {
     return false;
 }
 
-void Game::setGhostPosition(Piece *ghostPiece, Piece* currentPiece) {
+void Game::setGhostPosition(Piece *currentPiece, Piece* ghostPiece) {
     //set current ghost rotation the same as the current piece rotation
     ghostPiece->setRotation(currentPiece->getRotation());
     //set current ghost position the same as the current piece position
     ghostPiece->setPiecePosition(currentPiece->getPiecePosition());
 
+    //find lowest free ghost piece position
     while (!gameBoard.collidesWith(ghostPiece->getPiecePosition().getX(),
-                                   ghostPiece->getPiecePosition().getY(),
+                                   ghostPiece->getPiecePosition().getY() + 1,
                                    ghostPiece->getCurrentShape())) {
         ghostPiece->setPiecePosition(ghostPiece->getPiecePosition().getX(),
                                      ghostPiece->getPiecePosition().getY() + 1);

@@ -49,6 +49,7 @@ public:
 
     const Point getPiecePosition() const;
 
+    void setPiecePosition(int x, int y, bool fixedToBoard);
     void setPiecePosition(int x, int y);
     void setPiecePosition(Point x);
     void setPiecePosition();

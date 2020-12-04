@@ -51,18 +51,28 @@ const Point Piece::getPiecePosition() const {
     return piecePosition;
 }
 
-void Piece::setPiecePosition(int x, int y) {
+void Piece::setPiecePosition(int x, int y, bool fixedToBoard) {
     Piece::piecePosition.setX(x);
     Piece::piecePosition.setY(y);
     for (int i = 0; i < 4; i++) {
-        tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
-                                  (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
-        );
+        if (fixedToBoard)
+            tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
+                                      (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
+            );
+        else
+            tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32,
+                                      (piecePosition.getY() + shape[i].getY()) * 32
+            );
     }
 }
 
+void Piece::setPiecePosition(int x, int y) {
+    Piece::setPiecePosition(x, y, true);
+}
+
 void Piece::setPiecePosition(Point x) {
-    Piece::setPiecePosition(x.getX(), x.getY());
+    Piece::setPiecePosition(x.getX(), x.getY(), true);
+    setCurrentShape();
 }
 
 void Piece::setPiecePosition() {

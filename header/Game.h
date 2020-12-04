@@ -21,13 +21,13 @@ private:
     int level = 1;
     int totalRows = 0;
 
-    bool moveLeft(Piece* piece);
-    bool moveRight(Piece* piece);
-    bool rotateLeft(Piece* piece);
-    bool rotateRight(Piece* piece);
+    bool moveLeft(Piece *piece, Piece* ghostPiece);
+    bool moveRight(Piece *piece, Piece* ghostPiece);
+    bool rotateLeft(Piece *piece, Piece* ghostPiece);
+    bool rotateRight(Piece *piece, Piece* ghostPiece);
     bool fallDown(Piece* piece);
 
-    void setGhostPosition(Piece* ghostPiece, Piece* currentPiece);
+    void setGhostPosition(Piece *currentPiece, Piece* ghostPiece);
 
 public:
     Game();

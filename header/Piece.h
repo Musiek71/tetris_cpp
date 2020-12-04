@@ -39,6 +39,8 @@ public:
 
     void setShapes(Point shapes[4][4]);
 
+    Point* const getShapes() const;
+
     int getRotation() const;
 
     int getCurrentShapeInt() const;

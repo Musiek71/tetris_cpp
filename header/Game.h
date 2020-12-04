@@ -16,11 +16,18 @@ class Game {
 private:
     PieceFactory pieceFactory;
     Board gameBoard;
+    bool gameOver = false;
+    int score = 0;
+    int level = 1;
+    int totalRows = 0;
+
     bool moveLeft(Piece* piece);
     bool moveRight(Piece* piece);
     bool rotateLeft(Piece* piece);
     bool rotateRight(Piece* piece);
-    bool fallDown(Piece *piece);
+    bool fallDown(Piece* piece);
+
+    void setGhostPosition(Piece* ghostPiece, Piece* currentPiece);
 
 public:
     Game();

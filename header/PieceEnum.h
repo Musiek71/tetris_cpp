@@ -17,7 +17,8 @@ enum PieceEnum {
     OP, //O piece
     SP, //S piece
     TP, //T piece
-    ZP  //Z piece
+    ZP, //Z piece
+    GHOST
 };
 
 

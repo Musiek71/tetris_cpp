@@ -115,3 +115,7 @@ int Piece::getCurrentShapeInt() const {
     return currentShapeInt;
 }
 
+Point* const Piece::getShapes() const {
+    return (Point*) shapes;
+}
+

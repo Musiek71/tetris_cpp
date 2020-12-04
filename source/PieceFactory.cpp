@@ -13,6 +13,7 @@
 #include "../header/TPiece.h"
 #include "../header/SPiece.h"
 #include "../header/ZPiece.h"
+#include "../header/GhostPiece.h"
 
 PieceFactory::PieceFactory() {
     fillVector();
@@ -62,4 +63,8 @@ Piece* PieceFactory::getPiece() {
     }
 
     return ptr;
+}
+
+Piece *PieceFactory::getGhostPiece(Piece *currentPiece) {
+    return new GhostPiece("tileset.png", currentPiece->getRotation(), currentPiece->getShapes());
 }

@@ -17,6 +17,7 @@ public:
     PieceFactory();
 
     Piece* getPiece();
+    Piece* getGhostPiece(Piece* currentPiece);
 
 };
 

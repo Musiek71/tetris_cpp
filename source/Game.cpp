@@ -20,12 +20,11 @@ bool Game::run() {
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
     nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
+    Piece* ghostPiece =
 
-    bool gameOver = false;
+
     bool deltaFlag = false;
     float deltaTime = 0;
-    int score = 0;
-    int totalRows = 0;
 
     sf::Clock clock;
     sf::Time time = clock.getElapsedTime();
@@ -84,7 +83,12 @@ bool Game::run() {
 
                 //getting number of cleared rows
                 int clearedRows = gameBoard.updateBoard();
-                totalRows += clearedRows;
+                totalRows += gameBoard.updateBoard();
+
+//                updateScore(clearedRows);
+//                updateLevel();
+
+
 
                 //TODO score updating here i guess
             }
@@ -155,6 +159,20 @@ bool Game::fallDown(Piece *piece) {
         return true;
     }
     return false;
+}
+
+void Game::setGhostPosition(Piece *ghostPiece, Piece* currentPiece) {
+    //set current ghost rotation the same as the current piece rotation
+    ghostPiece->setRotation(currentPiece->getRotation());
+    //set current ghost position the same as the current piece position
+    ghostPiece->setPiecePosition(currentPiece->getPiecePosition());
+
+    while (!gameBoard.collidesWith(ghostPiece->getPiecePosition().getX(),
+                                   ghostPiece->getPiecePosition().getY(),
+                                   ghostPiece->getCurrentShape())) {
+        ghostPiece->setPiecePosition(ghostPiece->getPiecePosition().getX(),
+                                     ghostPiece->getPiecePosition().getY() + 1);
+    }
 }
 
 

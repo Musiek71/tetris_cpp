@@ -3,10 +3,11 @@
 //
 
 #include "../header/Game.h"
+#include "../header/ScoreBoard.h"
 #include <iostream>
 
 bool Game::run() {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
+    sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
     if (!gameBoard.init("tileset.png", 32))
@@ -16,12 +17,14 @@ bool Game::run() {
     backgroundText.loadFromFile("background.png");
     sf::Sprite background;
     background.setTexture(backgroundText);
+    background.setScale((float)window.getSize().x / backgroundText.getSize().x, (float)window.getSize().y / backgroundText.getSize().y );
 
-//    sf::Texture nextFieldText;
-//    nextFieldText.loadFromFile("next_field.png");
-//    sf::Sprite nextField;
-//    nextField.setTexture(nextFieldText);
-//    nextField.setPosition(16 * 32, 8 * 32);
+    sf::Texture nextFieldText;
+    nextFieldText.loadFromFile("next_field.png");
+    sf::Sprite nextField;
+    nextField.setTexture(nextFieldText);
+    nextField.setPosition(X_OFFSET + (BOARD_WIDTH + 1) * 32, 8 * 32);
+
 
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
@@ -29,6 +32,15 @@ bool Game::run() {
     Piece* ghostPiece = pieceFactory.getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
+    ScoreBoard scoreBoard("score_field.png",
+                          "gbfont.ttf",
+                          1,
+                          0,
+                          X_OFFSET + (BOARD_WIDTH + 1) * 32,
+                          16 * 32,
+                          32);
+    scoreBoard.setLevel(2137);
+    scoreBoard.setScore(1337);
 
     bool deltaFlag = false;
     float deltaTime = 0;
@@ -68,7 +80,8 @@ bool Game::run() {
 
         window.clear();
         window.draw(background);
-//        window.draw(nextField);
+        window.draw(nextField);
+        window.draw(scoreBoard);
         window.draw(gameBoard);
         window.draw(*currentPiece);
         window.draw(*nextPiece);

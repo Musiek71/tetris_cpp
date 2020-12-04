@@ -20,7 +20,7 @@ bool Game::run() {
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
     nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
-    Piece* ghostPiece =
+//    Piece* ghostPiece =
 
 
     bool deltaFlag = false;

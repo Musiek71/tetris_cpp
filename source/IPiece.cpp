@@ -20,4 +20,4 @@ Point IPiece::punkty[4][4] = {
         }
 };
 
-IPiece::IPiece(std::string tileset, int rotation) : Piece(tileset, rotation, IP, punkty) {}
+IPiece::IPiece(std::string tileset, int rotation) : Piece(tileset, rotation, IP, (Point*)punkty) {}

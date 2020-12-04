@@ -9,7 +9,7 @@
 
 class GhostPiece : public Piece {
 public:
-    GhostPiece(std::string tileset, int rotation, Point shapes[4][4]);
+    GhostPiece(std::string tileset, int rotation, Point* shapes);
 };
 
 

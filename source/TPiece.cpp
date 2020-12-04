@@ -20,4 +20,4 @@ Point TPiece::punkty[4][4] = {
         }
 };
 
-TPiece::TPiece(std::string tileset, int rotation) : Piece(tileset, rotation, TP, punkty) {}
+TPiece::TPiece(std::string tileset, int rotation) : Piece(tileset, rotation, TP, (Point*)punkty) {}

@@ -5,7 +5,7 @@
 #include "../header/Piece.h"
 #include "../header/Board.h"
 
-Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shapes[4][4]) : rotation(rotation), currentShapeInt(currentShapeInt) {
+Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
     this->piecePosition.setPos(DEFAULT_X, DEFAULT_Y);
 
@@ -20,11 +20,11 @@ Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shape
 
 }
 
-void Piece::setShapes(Point shapes[4][4]) {
+void Piece::setShapes(Point* shapes) {
     //copying shapes
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            this->shapes[i][j] = shapes[i][j];
+            this->shapes[i][j] = shapes[i * 4 + j];
         }
     }
     setCurrentShape();

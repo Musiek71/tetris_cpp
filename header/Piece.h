@@ -35,9 +35,9 @@ private:
 
 public:
 
-    Piece(std::string tileset, int rotation, int currentShapeInt, Point shapes[4][4]);
+    Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes);
 
-    void setShapes(Point shapes[4][4]);
+    void setShapes(Point* shapes);
 
     Point* const getShapes() const;
 

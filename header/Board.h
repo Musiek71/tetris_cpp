@@ -12,9 +12,11 @@
 #include "Piece.h"
 
 
-#define BOARD_WIDTH 12
+#define BOARD_WIDTH 12 //do modyfikacji w grze
 #define BOARD_HEIGHT 24
-#define Y_OFFSET 32 * 3
+#define DEFAULT_Y_OFFSET 3 * 32 //default offset hides 3 invisible rows used for piece spawning
+#define Y_OFFSET 3 * 32
+#define X_OFFSET 3 * 32
 
 class Board : public sf::Drawable, sf::Transformable {
 private:

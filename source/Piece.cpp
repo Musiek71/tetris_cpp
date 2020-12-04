@@ -13,8 +13,8 @@ Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point shape
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
         tileSprite[i].setTexture(tileSet);
-        tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32,
-                                  (piecePosition.getY() + shape[i].getY()) * 32 - Y_OFFSET
+        tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
+                                  (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
         );
     }
 
@@ -40,8 +40,10 @@ void Piece::setCurrentShape() {
 void Piece::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     for (int i = 0; i < 4; i++) {
-        //if (tileSprite[i].getPosition().y >= 32) code for drawing the window lower
-        target.draw(tileSprite[i], states);
+        //condition for drawing the piece lower
+        //3 * 32 is the default offset used for piece spawning
+        if (tileSprite[i].getPosition().y >= Y_OFFSET)
+            target.draw(tileSprite[i], states);
     }
 }
 
@@ -53,8 +55,8 @@ void Piece::setPiecePosition(int x, int y) {
     Piece::piecePosition.setX(x);
     Piece::piecePosition.setY(y);
     for (int i = 0; i < 4; i++) {
-        tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32,
-                                  (piecePosition.getY() + shape[i].getY()) * 32 - Y_OFFSET
+        tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
+                                  (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
         );
     }
 }

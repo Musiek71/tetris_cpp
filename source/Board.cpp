@@ -10,33 +10,15 @@ bool Board::init(std::string tileset, int tileSize) {
         return false;
 
     //set offset
-    this->setPosition(0, -Y_OFFSET);
+    this->setPosition(X_OFFSET, -DEFAULT_Y_OFFSET + Y_OFFSET);
 
     //resize the vertex array
     vertices.setPrimitiveType(sf::Quads);
     vertices.resize(BOARD_WIDTH * BOARD_HEIGHT * 4);
 
-    for (int i = 0; i < BOARD_WIDTH; i++) {
-        for (int j = 0; j < BOARD_HEIGHT; j++) {
-            //get the tileNumber
-            int tileNumber = board[i][j];
+    //initializing textures
+    updateAllTextures(32);
 
-            //get the pointer to the current quad
-            sf::Vertex* quad = &vertices[(i + j * BOARD_WIDTH) * 4];
-
-            //define its 4 corners
-            quad[0].position = sf::Vector2f(i * tileSize, j * tileSize);
-            quad[1].position = sf::Vector2f((i + 1) * tileSize, j * tileSize);
-            quad[2].position = sf::Vector2f((i + 1) * tileSize, (j + 1) * tileSize);
-            quad[3].position = sf::Vector2f(i * tileSize, (j + 1) * tileSize);
-
-            //define its 4 texture coordinates
-            quad[0].texCoords = sf::Vector2f(tileNumber * tileSize, 0);
-            quad[1].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, 0);
-            quad[2].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, tileSize);
-            quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
-        }
-    }
     return true;
 }
 
@@ -103,6 +85,7 @@ int Board::updateBoard() {
             y++;
         }
     }
+    return lineCounter;
 }
 
 void Board::pushRowDown(int row) {
@@ -116,7 +99,8 @@ void Board::pushRowDown(int row) {
 
 void Board::updateAllTextures(int tileSize) {
     for (int i = 0; i < BOARD_WIDTH; i++) {
-        for (int j = 0; j < BOARD_HEIGHT; j++) {
+        //editing j here modifies the number of visible walls, default is 3 rows for piece spawning
+        for (int j = DEFAULT_Y_OFFSET / 32; j < BOARD_HEIGHT; j++) {
             //get the tileNumber
             int tileNumber = board[i][j];
 

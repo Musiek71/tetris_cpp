@@ -76,12 +76,13 @@ bool Game::run() {
                 delete currentPiece;
 
                 //swap pieces
-                //TODO make it a separate function
                 currentPiece = nextPiece;
                 currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
+                //get new piece as the next piece
                 nextPiece = pieceFactory.getPiece();
                 nextPiece->setPiecePosition(BOARD_WIDTH + 2, 10);
 
+                //getting number of cleared rows
                 int clearedRows = gameBoard.updateBoard();
                 totalRows += clearedRows;
 

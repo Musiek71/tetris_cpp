@@ -23,12 +23,12 @@ bool Game::run() {
     nextFieldText.loadFromFile("next_field.png");
     sf::Sprite nextField;
     nextField.setTexture(nextFieldText);
-    nextField.setPosition(X_OFFSET + (BOARD_WIDTH + 1) * 32, 8 * 32);
+    nextField.setPosition(X_OFFSET + (BOARD_WIDTH + 2) * 32, 8 * 32);
 
 
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
-    nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 2, 10, false);
+    nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
     Piece* ghostPiece = pieceFactory.getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
@@ -36,7 +36,7 @@ bool Game::run() {
                           "gbfont.ttf",
                           1,
                           0,
-                          X_OFFSET + (BOARD_WIDTH + 1) * 32,
+                          X_OFFSET + (BOARD_WIDTH + 2) * 32,
                           16 * 32,
                           32);
     scoreBoard.setLevel(2137);
@@ -45,8 +45,12 @@ bool Game::run() {
     bool deltaFlag = false;
     float deltaTime = 0;
 
-    sf::Clock clock;
-    sf::Time time = clock.getElapsedTime();
+    bool fastFallFlag = false;
+
+    sf::Clock frameClock;
+    sf::Clock keyClock;
+    sf::Time frameTime = frameClock.getElapsedTime();
+    sf::Time keyTime = keyClock.getElapsedTime();
 
 
     while (window.isOpen()) {
@@ -56,27 +60,55 @@ bool Game::run() {
         }
 
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-            else if (event.type == sf::Event::KeyPressed)
-            {
-                //todo jedna funkcja
-                if (event.key.code == sf::Keyboard::Left)
-                    moveLeft(currentPiece, ghostPiece);
-                else if (event.key.code == sf::Keyboard::Right)
-                    moveRight(currentPiece, ghostPiece);
-//                else if (event.key.code == sf::Keyboard::Up)
-//                    (*currentPiece).setPiecePosition((*currentPiece).getPiecePosition().getX(), (*currentPiece).getPiecePosition().getY() - 1);
-                else if (event.key.code == sf::Keyboard::Down)
-                    fallDown(currentPiece);
-                else if (event.key.code == sf::Keyboard::Z)
+            else if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Z)
                     rotateLeft(currentPiece, ghostPiece);
                 else if (event.key.code == sf::Keyboard::X)
                     rotateRight(currentPiece, ghostPiece);
+//                else if (event.key.code == sf::Keyboard::Left)
+//                    moveLeft(currentPiece, ghostPiece);
+//                else if (event.key.code == sf::Keyboard::Right)
+//                    moveRight(currentPiece, ghostPiece);
             }
         }
+
+        keyTime = keyClock.getElapsedTime();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
+            if (!fallDown(currentPiece))
+                fastFallFlag = true;
+            keyClock.restart();
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.08) {
+            moveLeft(currentPiece, ghostPiece);
+            keyClock.restart();
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.08) {
+            moveRight(currentPiece, ghostPiece);
+            keyClock.restart();
+        }
+
+//        if (keyTime.asSeconds() > 0.02) {
+//            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+//                moveLeft(currentPiece, ghostPiece);
+//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+//                moveRight(currentPiece, ghostPiece);
+//            else
+//            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+//                if (!fallDown(currentPiece))
+//                    fastFallFlag = true;
+//            }
+//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+//                rotateLeft(currentPiece, ghostPiece);
+//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+//                rotateRight(currentPiece, ghostPiece);
+//            keyClock.restart();
+//        }
+
+
+
 
         window.clear();
         window.draw(background);
@@ -88,9 +120,9 @@ bool Game::run() {
         window.draw(*ghostPiece);
         window.display();
 
-        time = clock.getElapsedTime();
-        if (time.asSeconds() - deltaTime > 0.5) {
-            clock.restart();
+        frameTime = frameClock.getElapsedTime();
+        if (frameTime.asSeconds() - deltaTime > 0.5 | fastFallFlag) {
+            frameClock.restart();
             if (!fallDown(currentPiece)) {
                 gameOver = gameBoard.add(currentPiece);
 
@@ -102,7 +134,7 @@ bool Game::run() {
                 currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
                 //get new piece as the next piece
                 nextPiece = pieceFactory.getPiece();
-                nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 2, 10, false);
+                nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
                 //get new ghost piece and update it's position
                 ghostPiece = pieceFactory.getGhostPiece(currentPiece);
                 setGhostPosition(currentPiece, ghostPiece);
@@ -118,7 +150,7 @@ bool Game::run() {
 
                 //TODO score updating here i guess
             }
-
+            fastFallFlag = false;
         }
     }
 

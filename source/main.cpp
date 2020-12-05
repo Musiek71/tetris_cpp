@@ -11,6 +11,7 @@ int main() {
     //TODO HOLD function
     //TODO ability to configure board's size
     //TODO ghost piece
+    //TODO errors while loading things
 
     Game game;
     game.run();

@@ -12,7 +12,7 @@
 #include "Piece.h"
 
 
-#define BOARD_WIDTH 16 //do modyfikacji w grze
+#define BOARD_WIDTH 12 //do modyfikacji w grze
 #define BOARD_HEIGHT 24
 #define DEFAULT_Y_OFFSET 3 * 32 //default offset hides 3 invisible rows used for piece spawning
 #define Y_OFFSET 3 * 32

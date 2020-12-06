@@ -3,8 +3,6 @@
 //
 
 #include "../header/Game.h"
-#include "../header/ScoreBoard.h"
-#include <iostream>
 
 bool Game::run() {
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
@@ -19,16 +17,10 @@ bool Game::run() {
     background.setTexture(backgroundText);
     background.setScale((float)window.getSize().x / backgroundText.getSize().x, (float)window.getSize().y / backgroundText.getSize().y );
 
-    sf::Texture nextFieldText;
-    nextFieldText.loadFromFile("next_field.png");
-    sf::Sprite nextField;
-    nextField.setTexture(nextFieldText);
-    nextField.setPosition(X_OFFSET + (BOARD_WIDTH + 2) * 32, 8 * 32);
-
 
     Piece* currentPiece = pieceFactory.getPiece();
     Piece* nextPiece = pieceFactory.getPiece();
-    nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
+    //nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
     Piece* ghostPiece = pieceFactory.getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
@@ -41,6 +33,13 @@ bool Game::run() {
                           32);
     scoreBoard.setLevel(this->level);
     scoreBoard.setScore(this->score);
+
+    NextBoard nextBoard("next_field.png",
+                        nextPiece,
+                        X_OFFSET + (BOARD_WIDTH + 2) * 32,
+                        8 * 32,
+                        32);
+
 
     bool deltaFlag = false;
     float deltaTime = 0;
@@ -74,8 +73,7 @@ bool Game::run() {
         keyTime = keyClock.getElapsedTime();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
-            if (!fallDown(currentPiece))
-                fastFallFlag = true;
+            fastFallFlag = true;
             keyClock.restart();
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.08) {
             moveLeft(currentPiece, ghostPiece);
@@ -88,17 +86,22 @@ bool Game::run() {
 
         window.clear();
         window.draw(background);
-        window.draw(nextField);
+        window.draw(nextBoard);
         window.draw(scoreBoard);
         window.draw(gameBoard);
         window.draw(*currentPiece);
-        window.draw(*nextPiece);
         window.draw(*ghostPiece);
         window.display();
 
+
         frameTime = frameClock.getElapsedTime();
-        if (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.05| fastFallFlag) {
+        if (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.05)) {
             frameClock.restart();
+
+            //if fast falling, increment the score
+            if (fastFallFlag)
+                this->score += 1;
+
             if (!fallDown(currentPiece)) {
                 gameOver = gameBoard.add(currentPiece);
 
@@ -110,7 +113,7 @@ bool Game::run() {
                 currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
                 //get new piece as the next piece
                 nextPiece = pieceFactory.getPiece();
-                nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
+                nextBoard.setPiece(nextPiece);
                 //get new ghost piece and update it's position
                 ghostPiece = pieceFactory.getGhostPiece(currentPiece);
 
@@ -120,18 +123,17 @@ bool Game::run() {
                 //setting ghost position after board updating
                 setGhostPosition(currentPiece, ghostPiece);
 
+                //update score fields
                 this->totalRows += clearedRows;
                 updateScore(clearedRows);
                 updateLevel();
 
-                scoreBoard.setScore(this->score);
-                scoreBoard.setLevel(this->level);
-
-
-
-                //TODO score updating here i guess
             }
             fastFallFlag = false;
+
+            //update scoreboard
+            scoreBoard.setScore(this->score);
+            scoreBoard.setLevel(this->level);
         }
     }
 

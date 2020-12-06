@@ -2,7 +2,6 @@
 // Created by musiek on 11/21/20.
 //
 
-#include <iostream>
 #include "../header/Board.h"
 
 bool Board::init(std::string tileset, int tileSize) {

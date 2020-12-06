@@ -3,7 +3,6 @@
 //
 
 #include "../header/ScoreBoard.h"
-#include <iostream>
 
 
 ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, int level, int score, int x, int y, int tileSize) {
@@ -13,6 +12,8 @@ ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, int level
     }
     background.setTexture(texture);
     background.setPosition(x, y);
+
+    this->position.setPos(x, y);
 
     this->level = level;
     this->score = score;

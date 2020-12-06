@@ -10,6 +10,9 @@
 #include "Board.h"
 #include "../header/LPiece.h"
 #include "PieceFactory.h"
+#include "../header/ScoreBoard.h"
+#include <iostream>
+#include "../header/NextBoard.h"
 
 
 class Game {

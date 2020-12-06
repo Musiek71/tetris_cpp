@@ -7,9 +7,12 @@
 
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include "Point.h"
 
 class ScoreBoard : public sf::Drawable, sf::Transformable {
 private:
+    Point position;
     sf::Font font;
     sf::Sprite background;
     sf::Texture texture;

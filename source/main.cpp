@@ -7,11 +7,13 @@ int main() {
     //TODO sounds
     //TODO basic layout with background placeholder
     //TODO adaptive levels
-    //TODO score
     //TODO HOLD function
     //TODO ability to configure board's size
     //TODO ghost piece
     //TODO errors while loading things
+    //TODO make rotation with keypressed/keyreleased flag
+    //TODO separate class for next piece with background texture and piece for drawing, methods for updating the current piece
+    //as it will make the code clearer
 
     Game game;
     game.run();

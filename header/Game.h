@@ -29,6 +29,9 @@ private:
 
     void setGhostPosition(Piece *currentPiece, Piece* ghostPiece);
 
+    void updateScore(int clearedRows);
+    void updateLevel();
+
 public:
     Game();
 

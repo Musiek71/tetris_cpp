@@ -39,8 +39,8 @@ bool Game::run() {
                           X_OFFSET + (BOARD_WIDTH + 2) * 32,
                           16 * 32,
                           32);
-    scoreBoard.setLevel(2137);
-    scoreBoard.setScore(1337);
+    scoreBoard.setLevel(this->level);
+    scoreBoard.setScore(this->score);
 
     bool deltaFlag = false;
     float deltaTime = 0;
@@ -68,10 +68,6 @@ bool Game::run() {
                     rotateLeft(currentPiece, ghostPiece);
                 else if (event.key.code == sf::Keyboard::X)
                     rotateRight(currentPiece, ghostPiece);
-//                else if (event.key.code == sf::Keyboard::Left)
-//                    moveLeft(currentPiece, ghostPiece);
-//                else if (event.key.code == sf::Keyboard::Right)
-//                    moveRight(currentPiece, ghostPiece);
             }
         }
 
@@ -90,26 +86,6 @@ bool Game::run() {
             keyClock.restart();
         }
 
-//        if (keyTime.asSeconds() > 0.02) {
-//            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-//                moveLeft(currentPiece, ghostPiece);
-//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-//                moveRight(currentPiece, ghostPiece);
-//            else
-//            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-//                if (!fallDown(currentPiece))
-//                    fastFallFlag = true;
-//            }
-//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-//                rotateLeft(currentPiece, ghostPiece);
-//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
-//                rotateRight(currentPiece, ghostPiece);
-//            keyClock.restart();
-//        }
-
-
-
-
         window.clear();
         window.draw(background);
         window.draw(nextField);
@@ -121,7 +97,7 @@ bool Game::run() {
         window.display();
 
         frameTime = frameClock.getElapsedTime();
-        if (frameTime.asSeconds() - deltaTime > 0.5 | fastFallFlag) {
+        if (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.05| fastFallFlag) {
             frameClock.restart();
             if (!fallDown(currentPiece)) {
                 gameOver = gameBoard.add(currentPiece);
@@ -137,14 +113,19 @@ bool Game::run() {
                 nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
                 //get new ghost piece and update it's position
                 ghostPiece = pieceFactory.getGhostPiece(currentPiece);
-                setGhostPosition(currentPiece, ghostPiece);
 
                 //getting number of cleared rows
                 int clearedRows = gameBoard.updateBoard();
-                totalRows += gameBoard.updateBoard();
 
-//                updateScore(clearedRows);
-//                updateLevel();
+                //setting ghost position after board updating
+                setGhostPosition(currentPiece, ghostPiece);
+
+                this->totalRows += clearedRows;
+                updateScore(clearedRows);
+                updateLevel();
+
+                scoreBoard.setScore(this->score);
+                scoreBoard.setLevel(this->level);
 
 
 
@@ -236,6 +217,27 @@ void Game::setGhostPosition(Piece *currentPiece, Piece* ghostPiece) {
         ghostPiece->setPiecePosition(ghostPiece->getPiecePosition().getX(),
                                      ghostPiece->getPiecePosition().getY() + 1);
     }
+}
+
+void Game::updateScore(int clearedRows) {
+    switch (clearedRows) {
+        case 1:
+            this->score += 40 * this->level;
+            break;
+        case 2:
+            this->score += 100 * this->level;
+            break;
+        case 3:
+            this->score += 300 * this->level;
+            break;
+        case 4:
+            this->score += 1200 * this->level;
+            break;
+    }
+}
+
+void Game::updateLevel() {
+    this->level = this->totalRows / 10 + 1;
 }
 
 

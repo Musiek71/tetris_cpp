@@ -10,8 +10,6 @@ int main() {
     //TODO ability to configure board's size
     //TODO errors while loading things
     //TODO make rotation with keypressed/keyreleased flag
-    //TODO separate class for next piece with background texture and piece for drawing, methods for updating the current piece
-    //as it will make the code clearer
     //TODO game over
 
     Game game;

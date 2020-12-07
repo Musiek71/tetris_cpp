@@ -8,8 +8,10 @@ bool Game::run() {
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    if (!gameBoard.init("tileset.png", 32))
+    if (!gameBoard.init("tileset.png", 32)) {
+        std::cout << "Tileset loading failed." << std::endl;
         return false;
+    }
 
     sf::Texture backgroundText;
     backgroundText.loadFromFile("background.png");
@@ -41,7 +43,6 @@ bool Game::run() {
                         32);
 
 
-    bool deltaFlag = false;
     float deltaTime = 0;
 
     bool fastFallFlag = false;
@@ -55,6 +56,8 @@ bool Game::run() {
     while (window.isOpen()) {
 
         if (gameOver) {
+            std::cout << "Game over!\n";
+            std::cout << "Score:" << this->score << "\nLevel:" << this->level << std::endl;
             break;
         }
 

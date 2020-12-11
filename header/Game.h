@@ -17,8 +17,10 @@
 
 class Game {
 private:
-    PieceFactory pieceFactory;
-    Board gameBoard;
+    int boardWidth;
+    int boardHeight;
+    PieceFactory* pieceFactory;
+    Board* gameBoard;
     bool gameOver = false;
     int score = 0;
     int level = 1;
@@ -36,7 +38,9 @@ private:
     void updateLevel();
 
 public:
-    Game();
+    Game(int boardWidth, int boardHeight);
+
+    virtual ~Game();
 
     bool run();
 

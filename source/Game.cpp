@@ -8,7 +8,7 @@ bool Game::run() {
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    if (!gameBoard.init("tileset.png", 32)) {
+    if (!gameBoard->init("tileset.png", 32)) {
         std::cout << "Tileset loading failed." << std::endl;
         return false;
     }
@@ -20,17 +20,17 @@ bool Game::run() {
     background.setScale((float)window.getSize().x / backgroundText.getSize().x, (float)window.getSize().y / backgroundText.getSize().y );
 
 
-    Piece* currentPiece = pieceFactory.getPiece();
-    Piece* nextPiece = pieceFactory.getPiece();
+    Piece* currentPiece = pieceFactory->getPiece();
+    Piece* nextPiece = pieceFactory->getPiece();
     //nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
-    Piece* ghostPiece = pieceFactory.getGhostPiece(currentPiece);
+    Piece* ghostPiece = pieceFactory->getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
     ScoreBoard scoreBoard("score_field.png",
                           "gbfont.ttf",
                           1,
                           0,
-                          X_OFFSET + (BOARD_WIDTH + 2) * 32,
+                          X_OFFSET + (this->boardWidth + 2) * 32,
                           16 * 32,
                           32);
     scoreBoard.setLevel(this->level);
@@ -38,7 +38,7 @@ bool Game::run() {
 
     NextBoard nextBoard("next_field.png",
                         nextPiece,
-                        X_OFFSET + (BOARD_WIDTH + 2) * 32,
+                        X_OFFSET + (this->boardWidth + 2) * 32,
                         8 * 32,
                         32);
 
@@ -58,6 +58,11 @@ bool Game::run() {
         if (gameOver) {
             std::cout << "Game over!\n";
             std::cout << "Score:" << this->score << "\nLevel:" << this->level << std::endl;
+
+            delete currentPiece;
+            delete nextPiece;
+            delete ghostPiece;
+
             break;
         }
 
@@ -91,7 +96,7 @@ bool Game::run() {
         window.draw(background);
         window.draw(nextBoard);
         window.draw(scoreBoard);
-        window.draw(gameBoard);
+        window.draw(*gameBoard);
         window.draw(*currentPiece);
         window.draw(*ghostPiece);
         window.display();
@@ -106,7 +111,7 @@ bool Game::run() {
                 this->score += 1;
 
             if (!fallDown(currentPiece)) {
-                gameOver = gameBoard.add(currentPiece);
+                gameOver = gameBoard->add(currentPiece);
 
                 delete currentPiece;
                 delete ghostPiece;
@@ -115,13 +120,13 @@ bool Game::run() {
                 currentPiece = nextPiece;
                 currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
                 //get new piece as the next piece
-                nextPiece = pieceFactory.getPiece();
+                nextPiece = pieceFactory->getPiece();
                 nextBoard.setPiece(nextPiece);
                 //get new ghost piece and update it's position
-                ghostPiece = pieceFactory.getGhostPiece(currentPiece);
+                ghostPiece = pieceFactory->getGhostPiece(currentPiece);
 
                 //getting number of cleared rows
-                int clearedRows = gameBoard.updateBoard();
+                int clearedRows = gameBoard->updateBoard();
 
                 //setting ghost position after board updating
                 setGhostPosition(currentPiece, ghostPiece);
@@ -143,10 +148,16 @@ bool Game::run() {
     return true;
 }
 
-Game::Game() {}
+Game::Game(int boardWidth, int boardHeight) {
+    this->boardWidth = boardWidth + 2; //side walls
+    this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
+
+    this->gameBoard = new Board(this->boardWidth, this->boardHeight);
+    this->pieceFactory = new PieceFactory();
+}
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
-    if (!gameBoard.collidesWith(
+    if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX() - 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
@@ -159,7 +170,7 @@ bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::moveRight(Piece *piece, Piece* ghostPiece) {
-    if (!gameBoard.collidesWith(
+    if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX() + 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
@@ -172,7 +183,7 @@ bool Game::moveRight(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::rotateLeft(Piece *piece, Piece* ghostPiece) {
-    if (!gameBoard.collidesWith(
+    if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getLeftRotationShape())
@@ -185,7 +196,7 @@ bool Game::rotateLeft(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::rotateRight(Piece *piece, Piece* ghostPiece) {
-    if (!gameBoard.collidesWith(
+    if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getRightRotationShape())
@@ -198,7 +209,7 @@ bool Game::rotateRight(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::fallDown(Piece *piece) {
-    if (!gameBoard.collidesWith(
+    if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY() + 1,
             piece->getCurrentShape())
@@ -216,7 +227,7 @@ void Game::setGhostPosition(Piece *currentPiece, Piece* ghostPiece) {
     ghostPiece->setPiecePosition(currentPiece->getPiecePosition());
 
     //find lowest free ghost piece position
-    while (!gameBoard.collidesWith(ghostPiece->getPiecePosition().getX(),
+    while (!gameBoard->collidesWith(ghostPiece->getPiecePosition().getX(),
                                    ghostPiece->getPiecePosition().getY() + 1,
                                    ghostPiece->getCurrentShape())) {
         ghostPiece->setPiecePosition(ghostPiece->getPiecePosition().getX(),
@@ -243,6 +254,11 @@ void Game::updateScore(int clearedRows) {
 
 void Game::updateLevel() {
     this->level = this->totalRows / 10 + 1;
+}
+
+Game::~Game() {
+    delete this->gameBoard;
+    delete this->pieceFactory;
 }
 
 

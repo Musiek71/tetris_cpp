@@ -5,6 +5,7 @@
 #include "../header/Board.h"
 
 bool Board::init(std::string tileset, int tileSize) {
+    //TODO throw exceptions if not loaded
     if (!tileSet.loadFromFile(tileset))
         return false;
 
@@ -13,7 +14,7 @@ bool Board::init(std::string tileset, int tileSize) {
 
     //resize the vertex array
     vertices.setPrimitiveType(sf::Quads);
-    vertices.resize(BOARD_WIDTH * BOARD_HEIGHT * 4);
+    vertices.resize(this->boardWidth * this->boardHeight * 4);
 
     //initializing textures
     updateAllTextures(32);
@@ -29,10 +30,18 @@ void Board::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(vertices, states);
 }
 
-Board::Board() {
-    for (int i = 0; i < BOARD_WIDTH; i++) {
-        for (int j = 0; j < BOARD_HEIGHT; j++) {
-            if (i == 0 || i == BOARD_WIDTH - 1 || j == BOARD_HEIGHT - 1) {
+Board::Board(int boardWidth, int boardHeight) {
+    //TODO throw exception when board's dimensions are wrong
+    this->boardWidth = boardWidth;
+    this->boardHeight = boardHeight;
+
+    this->board = new int*[this->boardWidth];
+    for (int i = 0; i < this->boardWidth; i++)
+        this->board[i] = new int[boardHeight];
+
+    for (int i = 0; i < this->boardWidth; i++) {
+        for (int j = 0; j < this->boardHeight; j++) {
+            if (i == 0 || i == this->boardWidth - 1 || j == this->boardHeight - 1) {
                 board[i][j] = WALL;
             } else {
                 board[i][j] = NONE;
@@ -61,7 +70,7 @@ bool Board::add(Piece *piece) {
 }
 
 void Board::updateTexture(Point piecePos, Point shapePoint, int tileNumber, int tileSize) {
-    sf::Vertex* quad = &vertices[(piecePos.getX() + shapePoint.getX() + (piecePos.getY() + shapePoint.getY())* BOARD_WIDTH) * 4];
+    sf::Vertex* quad = &vertices[(piecePos.getX() + shapePoint.getX() + (piecePos.getY() + shapePoint.getY())* this->boardWidth) * 4];
     quad[0].texCoords = sf::Vector2f(tileNumber * tileSize, 0);
     quad[1].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, 0);
     quad[2].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, tileSize);
@@ -72,9 +81,9 @@ int Board::updateBoard() {
     bool foundFullRow = true;
     int lineCounter = 0;
 
-    for (int y = BOARD_HEIGHT - 2; y > 0; y--) {
+    for (int y = this->boardHeight - 2; y > 0; y--) {
         foundFullRow = true;
-        for (int x = 1; x < BOARD_WIDTH - 1; x++) {
+        for (int x = 1; x < this->boardWidth - 1; x++) {
             if (board[x][y] == 0)
                 foundFullRow = false;
         }
@@ -89,7 +98,7 @@ int Board::updateBoard() {
 
 void Board::pushRowDown(int row) {
     for (int y = row; y > 0; y--) {
-        for (int x = 1; x < BOARD_WIDTH - 1; x++) {
+        for (int x = 1; x < this->boardWidth - 1; x++) {
             board[x][y] = board[x][y - 1];
             updateAllTextures(32);
         }
@@ -97,14 +106,14 @@ void Board::pushRowDown(int row) {
 }
 
 void Board::updateAllTextures(int tileSize) {
-    for (int i = 0; i < BOARD_WIDTH; i++) {
+    for (int i = 0; i < this->boardWidth; i++) {
         //editing j here modifies the number of visible walls, default is 3 rows for piece spawning
-        for (int j = DEFAULT_Y_OFFSET / 32; j < BOARD_HEIGHT; j++) {
+        for (int j = DEFAULT_Y_OFFSET / 32; j < this->boardHeight; j++) {
             //get the tileNumber
             int tileNumber = board[i][j];
 
             //get the pointer to the current quad
-            sf::Vertex* quad = &vertices[(i + j * BOARD_WIDTH) * 4];
+            sf::Vertex* quad = &vertices[(i + j * this->boardWidth) * 4];
 
             //define its 4 corners
             quad[0].position = sf::Vector2f(i * tileSize, j * tileSize);
@@ -119,4 +128,11 @@ void Board::updateAllTextures(int tileSize) {
             quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
         }
     }
+}
+
+Board::~Board() {
+    for (int i = 0; i < this->boardWidth; i++)
+        delete[] this->board[i];
+
+    delete[] this->board;
 }

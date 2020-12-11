@@ -4,6 +4,7 @@
 
 int main() {
     //TODO state machine for HOLD and clearing animations to implement in the future??
+    //TODO state machine for main menu
     //TODO sounds
     //TODO basic layout with background placeholder
     //TODO HOLD function
@@ -12,7 +13,7 @@ int main() {
     //TODO make rotation with keypressed/keyreleased flag
     //TODO game over
 
-    Game game;
+    Game game(10, 20);
     game.run();
 
     return 0;

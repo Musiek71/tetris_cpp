@@ -11,6 +11,11 @@ bool Game::run() {
         return false;
     }
 
+    window->setSize(sf::Vector2u((boardWidth + 13) * 32, boardHeight * 32));
+
+    sf::View gameView(sf::FloatRect(0, 0, (boardWidth + 13) * 32, boardHeight * 32));
+    window->setView(gameView);
+
     sf::Texture backgroundText;
     backgroundText.loadFromFile("background.png");
     sf::Sprite background;
@@ -29,7 +34,7 @@ bool Game::run() {
                           1,
                           0,
                           X_OFFSET + (this->boardWidth + 2) * 32,
-                          16 * 32,
+                          9 * 32,
                           32);
     scoreBoard.setLevel(this->level);
     scoreBoard.setScore(this->score);
@@ -37,7 +42,7 @@ bool Game::run() {
     NextBoard nextBoard("next_field.png",
                         nextPiece,
                         X_OFFSET + (this->boardWidth + 2) * 32,
-                        8 * 32,
+                        1* 32,
                         32);
 
 
@@ -177,10 +182,10 @@ Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volu
         this->boardWidth = boardWidth + 2; //side walls
     else
         this->boardWidth = 5 + 2;
-    if (boardHeight >= 5)
+    if (boardHeight >= 10)
         this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
     else
-        this->boardHeight = 5 + 4;
+        this->boardHeight = 10 + 4;
 
     this->gameBoard = new Board(this->boardWidth, this->boardHeight);
     this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 1);

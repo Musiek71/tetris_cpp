@@ -13,10 +13,10 @@ int main() {
     //TODO game over
     //TODO leaderboards
 
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    Game game(5, 5, &window, 20);
+    Game game( 10, 20, &window, 20);
     game.run();
 
     return 0;

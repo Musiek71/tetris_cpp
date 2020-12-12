@@ -10,7 +10,7 @@
 #include <random>
 #include <chrono>
 #include "Piece.h"
-#include "PieceEnum.h"
+#include "../PieceEnum.h"
 #include "IPiece.h"
 #include "JPiece.h"
 #include "LPiece.h"

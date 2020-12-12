@@ -3,7 +3,7 @@
 //
 
 #include "../../header/Game/ZPiece.h"
-#include "../../header/Game/PieceEnum.h"
+#include "../../header/PieceEnum.h"
 
 Point ZPiece::punkty[4][4] = {
         {

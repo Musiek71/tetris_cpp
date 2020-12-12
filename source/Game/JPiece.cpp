@@ -3,7 +3,7 @@
 //
 
 #include "../../header/Game/JPiece.h"
-#include "../../header/Game/PieceEnum.h"
+#include "../../header/PieceEnum.h"
 
 Point JPiece::punkty[4][4] = {
         {

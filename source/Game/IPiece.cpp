@@ -3,7 +3,7 @@
 //
 
 #include "../../header/Game/IPiece.h"
-#include "../../header/Game/PieceEnum.h"
+#include "../../header/PieceEnum.h"
 
 Point IPiece::punkty[4][4] = {
         {

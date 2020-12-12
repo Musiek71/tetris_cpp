@@ -16,7 +16,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    Game game( 10, 20, &window, 20);
+    Game game( 10, 20, &window, 0);
     game.run();
 
     return 0;

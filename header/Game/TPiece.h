@@ -12,7 +12,7 @@
 class TPiece : public Piece {
     static Point punkty[4][4];
 public:
-    TPiece(std::string tileset, int rotation);
+    TPiece(std::string tileset, int rotation, int spawnX);
 };
 
 

@@ -2,8 +2,8 @@
 // Created by musiek on 11/21/20.
 //
 
-#include "../header/ZPiece.h"
-#include "../header/PieceEnum.h"
+#include "../../header/Game/ZPiece.h"
+#include "../../header/Game/PieceEnum.h"
 
 Point ZPiece::punkty[4][4] = {
         {
@@ -20,4 +20,4 @@ Point ZPiece::punkty[4][4] = {
         }
 };
 
-ZPiece::ZPiece(std::string tileset, int rotation) : Piece(tileset, rotation, ZP, (Point*)punkty) {}
+ZPiece::ZPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, ZP, (Point*)punkty, spawnX) {}

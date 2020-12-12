@@ -2,7 +2,7 @@
 // Created by musiek on 12/6/20.
 //
 
-#include "../header/NextBoard.h"
+#include "../../header/Game/NextBoard.h"
 
 NextBoard::NextBoard(std::string textfilename, Piece *piece, int x, int y, int tileSize) {
     if (!texture.loadFromFile(textfilename)) {

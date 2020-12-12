@@ -2,8 +2,8 @@
 // Created by musiek on 17.11.2020.
 //
 
-#include "../header/IPiece.h"
-#include "../header/PieceEnum.h"
+#include "../../header/Game/IPiece.h"
+#include "../../header/Game/PieceEnum.h"
 
 Point IPiece::punkty[4][4] = {
         {
@@ -20,4 +20,4 @@ Point IPiece::punkty[4][4] = {
         }
 };
 
-IPiece::IPiece(std::string tileset, int rotation) : Piece(tileset, rotation, IP, (Point*)punkty) {}
+IPiece::IPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, IP, (Point*)punkty, spawnX) {}

@@ -8,11 +8,12 @@
 
 #include "Piece.h"
 #include "Board.h"
-#include "../header/LPiece.h"
+#include "LPiece.h"
 #include "PieceFactory.h"
-#include "../header/ScoreBoard.h"
+#include "ScoreBoard.h"
 #include <iostream>
-#include "../header/NextBoard.h"
+#include <SFML/Audio.hpp>
+#include "NextBoard.h"
 
 
 class Game {
@@ -25,6 +26,9 @@ private:
     int score = 0;
     int level = 1;
     int totalRows = 0;
+    float volume = 100;
+
+    sf::RenderWindow* window;
 
     bool moveLeft(Piece *piece, Piece* ghostPiece);
     bool moveRight(Piece *piece, Piece* ghostPiece);
@@ -38,7 +42,7 @@ private:
     void updateLevel();
 
 public:
-    Game(int boardWidth, int boardHeight);
+    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume);
 
     virtual ~Game();
 

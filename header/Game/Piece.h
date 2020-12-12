@@ -9,7 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include "Point.h"
 
-#define DEFAULT_X 4
 #define DEFAULT_Y 0
 
 /**
@@ -35,7 +34,7 @@ private:
 
 public:
 
-    Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes);
+    Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes, int spawnX = 4);
 
     void setShapes(Point* shapes);
 

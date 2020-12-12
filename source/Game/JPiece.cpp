@@ -2,8 +2,8 @@
 // Created by musiek on 11/21/20.
 //
 
-#include "../header/JPiece.h"
-#include "../header/PieceEnum.h"
+#include "../../header/Game/JPiece.h"
+#include "../../header/Game/PieceEnum.h"
 
 Point JPiece::punkty[4][4] = {
         {
@@ -20,4 +20,4 @@ Point JPiece::punkty[4][4] = {
         }
 };
 
-JPiece::JPiece(std::string tileset, int rotation) : Piece(tileset, rotation, JP, (Point*)punkty) {}
+JPiece::JPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, JP, (Point*)punkty, spawnX) {}

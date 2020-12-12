@@ -7,7 +7,7 @@
 
 
 #include <SFML/Graphics.hpp>
-#include "../header/PieceEnum.h"
+#include "PieceEnum.h"
 #include "Point.h"
 #include "Piece.h"
 

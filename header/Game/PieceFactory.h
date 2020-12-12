@@ -10,22 +10,23 @@
 #include <random>
 #include <chrono>
 #include "Piece.h"
-#include "../header/PieceEnum.h"
-#include "../header/IPiece.h"
-#include "../header/JPiece.h"
-#include "../header/LPiece.h"
-#include "../header/OPiece.h"
-#include "../header/TPiece.h"
-#include "../header/SPiece.h"
-#include "../header/ZPiece.h"
-#include "../header/GhostPiece.h"
+#include "PieceEnum.h"
+#include "IPiece.h"
+#include "JPiece.h"
+#include "LPiece.h"
+#include "OPiece.h"
+#include "TPiece.h"
+#include "SPiece.h"
+#include "ZPiece.h"
+#include "GhostPiece.h"
 
 class PieceFactory {
     std::vector<int> pieceVector;
+    int defaultX;
 
     void fillVector();
 public:
-    PieceFactory();
+    PieceFactory(int defaultX);
 
     Piece* getPiece();
     Piece* getGhostPiece(Piece* currentPiece);

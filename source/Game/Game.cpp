@@ -2,11 +2,9 @@
 // Created by musiek on 11/21/20.
 //
 
-#include "../header/Game.h"
+#include "../../header/Game/Game.h"
 
 bool Game::run() {
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Tetris");
-    window.setVerticalSyncEnabled(true);
 
     if (!gameBoard->init("tileset.png", 32)) {
         std::cout << "Tileset loading failed." << std::endl;
@@ -17,7 +15,7 @@ bool Game::run() {
     backgroundText.loadFromFile("background.png");
     sf::Sprite background;
     background.setTexture(backgroundText);
-    background.setScale((float)window.getSize().x / backgroundText.getSize().x, (float)window.getSize().y / backgroundText.getSize().y );
+    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
 
 
     Piece* currentPiece = pieceFactory->getPiece();
@@ -52,8 +50,30 @@ bool Game::run() {
     sf::Time frameTime = frameClock.getElapsedTime();
     sf::Time keyTime = keyClock.getElapsedTime();
 
+    sf::SoundBuffer fallSoundBuffer;
+    sf::Sound fallSound;
+    if (!fallSoundBuffer.loadFromFile("fall.wav"))
+        return -1;
+    fallSound.setBuffer(fallSoundBuffer);
+    fallSound.setVolume(this->volume);
 
-    while (window.isOpen()) {
+    sf::SoundBuffer clearedSoundBuffer;
+    sf::Sound clearedSound;
+    if (!clearedSoundBuffer.loadFromFile("powerup.wav"))
+        return -1;
+    clearedSound.setBuffer(clearedSoundBuffer);
+    clearedSound.setVolume(this->volume);
+
+    sf::Music music;
+    if (!music.openFromFile("tetris.ogg"))
+        return -1;
+    music.setVolume(this->volume);
+    music.setLoop(true);
+    music.play();
+
+
+
+    while (window->isOpen()) {
 
         if (gameOver) {
             std::cout << "Game over!\n";
@@ -67,9 +87,9 @@ bool Game::run() {
         }
 
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-                window.close();
+                window->close();
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Z)
                     rotateLeft(currentPiece, ghostPiece);
@@ -92,14 +112,14 @@ bool Game::run() {
             keyClock.restart();
         }
 
-        window.clear();
-        window.draw(background);
-        window.draw(nextBoard);
-        window.draw(scoreBoard);
-        window.draw(*gameBoard);
-        window.draw(*currentPiece);
-        window.draw(*ghostPiece);
-        window.display();
+        window->clear();
+        window->draw(background);
+        window->draw(nextBoard);
+        window->draw(scoreBoard);
+        window->draw(*gameBoard);
+        window->draw(*currentPiece);
+        window->draw(*ghostPiece);
+        window->display();
 
 
         frameTime = frameClock.getElapsedTime();
@@ -111,6 +131,7 @@ bool Game::run() {
                 this->score += 1;
 
             if (!fallDown(currentPiece)) {
+                fallSound.play();
                 gameOver = gameBoard->add(currentPiece);
 
                 delete currentPiece;
@@ -118,7 +139,7 @@ bool Game::run() {
 
                 //swap pieces
                 currentPiece = nextPiece;
-                currentPiece->setPiecePosition(DEFAULT_X, DEFAULT_Y);
+                currentPiece->setPiecePosition(this->boardWidth / 2 - 1, DEFAULT_Y);
                 //get new piece as the next piece
                 nextPiece = pieceFactory->getPiece();
                 nextBoard.setPiece(nextPiece);
@@ -127,6 +148,9 @@ bool Game::run() {
 
                 //getting number of cleared rows
                 int clearedRows = gameBoard->updateBoard();
+
+                if (clearedRows)
+                    clearedSound.play();
 
                 //setting ghost position after board updating
                 setGhostPosition(currentPiece, ghostPiece);
@@ -148,12 +172,22 @@ bool Game::run() {
     return true;
 }
 
-Game::Game(int boardWidth, int boardHeight) {
-    this->boardWidth = boardWidth + 2; //side walls
-    this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
+Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume) {
+    if (boardWidth >= 5)
+        this->boardWidth = boardWidth + 2; //side walls
+    else
+        this->boardWidth = 5 + 2;
+    if (boardHeight >= 5)
+        this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
+    else
+        this->boardHeight = 5 + 4;
 
     this->gameBoard = new Board(this->boardWidth, this->boardHeight);
-    this->pieceFactory = new PieceFactory();
+    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 1);
+
+    this->window = window;
+
+    this->volume = volume;
 }
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {

@@ -2,12 +2,12 @@
 // Created by musiek on 16.11.2020.
 //
 
-#include "../header/Piece.h"
-#include "../header/Board.h"
+#include "../../header/Game/Piece.h"
+#include "../../header/Game/Board.h"
 
-Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes) : rotation(rotation), currentShapeInt(currentShapeInt) {
+Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes, int spawnX) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
-    this->piecePosition.setPos(DEFAULT_X, DEFAULT_Y);
+    this->piecePosition.setPos(spawnX, DEFAULT_Y);
 
     int loaded = tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
     //init of four sprites representing piece

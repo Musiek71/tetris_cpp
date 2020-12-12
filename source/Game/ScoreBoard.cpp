@@ -2,7 +2,7 @@
 // Created by musiek on 12/4/20.
 //
 
-#include "../header/ScoreBoard.h"
+#include "../../header/Game/ScoreBoard.h"
 
 
 ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, int level, int score, int x, int y, int tileSize) {

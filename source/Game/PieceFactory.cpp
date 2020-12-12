@@ -2,9 +2,10 @@
 // Created by musiek on 11/21/20.
 //
 
-#include "../header/PieceFactory.h"
+#include "../../header/Game/PieceFactory.h"
 
-PieceFactory::PieceFactory() {
+PieceFactory::PieceFactory(int defaultX) {
+    this->defaultX = defaultX;
     fillVector();
 }
 
@@ -29,25 +30,25 @@ Piece* PieceFactory::getPiece() {
     Piece* ptr;
     switch(random) {
         case 2:
-            ptr = new IPiece("tileset.png", 0);
+            ptr = new IPiece("tileset.png", 0, defaultX);
             break;
         case 3:
-            ptr = new JPiece("tileset.png", 0);
+            ptr = new JPiece("tileset.png", 0, defaultX);
             break;
         case 4:
-            ptr = new LPiece("tileset.png", 0);
+            ptr = new LPiece("tileset.png", 0, defaultX);
             break;
         case 5:
-            ptr = new OPiece("tileset.png", 0);
+            ptr = new OPiece("tileset.png", 0, defaultX);
             break;
         case 6:
-            ptr = new SPiece("tileset.png", 0);
+            ptr = new SPiece("tileset.png", 0, defaultX);
             break;
         case 7:
-            ptr = new TPiece("tileset.png", 0);
+            ptr = new TPiece("tileset.png", 0, defaultX);
             break;
         case 8:
-            ptr = new ZPiece("tileset.png", 0);
+            ptr = new ZPiece("tileset.png", 0, defaultX);
             break;
     }
 

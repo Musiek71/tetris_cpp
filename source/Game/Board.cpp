@@ -2,7 +2,7 @@
 // Created by musiek on 11/21/20.
 //
 
-#include "../header/Board.h"
+#include "../../header/Game/Board.h"
 
 bool Board::init(std::string tileset, int tileSize) {
     //TODO throw exceptions if not loaded
@@ -31,7 +31,6 @@ void Board::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 Board::Board(int boardWidth, int boardHeight) {
-    //TODO throw exception when board's dimensions are wrong
     this->boardWidth = boardWidth;
     this->boardHeight = boardHeight;
 

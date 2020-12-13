@@ -11,6 +11,7 @@
 #include "LPiece.h"
 #include "PieceFactory.h"
 #include "ScoreBoard.h"
+#include "../../header/StatesEnum.h"
 #include <iostream>
 #include <SFML/Audio.hpp>
 #include "NextBoard.h"
@@ -28,6 +29,8 @@ private:
     int totalRows = 0;
     float volume = 100;
 
+    int* gameStatePtr;
+
     sf::RenderWindow* window;
 
     bool moveLeft(Piece *piece, Piece* ghostPiece);
@@ -42,7 +45,7 @@ private:
     void updateLevel();
 
 public:
-    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume);
+    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr);
 
     virtual ~Game();
 

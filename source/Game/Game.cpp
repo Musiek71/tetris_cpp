@@ -84,6 +84,8 @@ bool Game::run() {
             std::cout << "Game over!\n";
             std::cout << "Score:" << this->score << "\nLevel:" << this->level << std::endl;
 
+            *gameStatePtr = GAMEOVER;
+
             delete currentPiece;
             delete nextPiece;
             delete ghostPiece;
@@ -177,7 +179,7 @@ bool Game::run() {
     return true;
 }
 
-Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume) {
+Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr) {
     if (boardWidth >= 5)
         this->boardWidth = boardWidth + 2; //side walls
     else
@@ -188,11 +190,13 @@ Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volu
         this->boardHeight = 10 + 4;
 
     this->gameBoard = new Board(this->boardWidth, this->boardHeight);
-    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 1);
+    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2);
 
     this->window = window;
 
     this->volume = volume;
+
+    this->gameStatePtr = gameStatePtr;
 }
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {

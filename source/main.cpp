@@ -1,5 +1,8 @@
 #include <iostream>
 #include "../header/Game/Game.h"
+#include "../header/Menu/Button.h"
+#include "../header/StatesEnum.h"
+#include "../header/Menu/Menu.h"
 
 
 int main() {
@@ -13,11 +16,39 @@ int main() {
     //TODO game over
     //TODO leaderboards
 
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Tetris");
+    int volume = 10;
+    int score = 0;
+    int level = 1;
+    int boardWidth = 10;
+    int boardHeight = 20;
+    int gameState = MENU;
+
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    Game game( 10, 20, &window, 0);
-    game.run();
+
+    while (window.isOpen()) {
+        switch (gameState) {
+            case MENU: {
+                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
+                menu.run();
+                break;
+            }
+
+            case GAME: {
+                Game game(boardWidth, boardHeight, &window, volume, &gameState);
+                game.run();
+                break;
+            }
+
+            case GAMEOVER: {
+                gameState = MENU; // temporary
+            }
+        }
+    }
+
+//    Game game( 10, 20, &window, 0);
+//    game.run();
 
     return 0;
 }

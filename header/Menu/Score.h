@@ -15,24 +15,24 @@ private:
     sf::Font* font;
 
     std::string nick;
-    int score = 0;
+    long score = 0;
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 public:
-    Score(const std::string &nick, int score, sf::Font* font);
+    Score(const std::string &nick, long score, sf::Font* font);
 
     const std::string &getNick() const;
 
     void setNick(const std::string &nick);
 
-    int getScore() const;
+    long getScore() const;
 
-    void setScore(int score);
+    void setScore(long score);
 
     void update(int x, int y, int position);
 
-    void update(int x, int y, int position, std::string nick, int score);
+    void update(int x, int y, int position, std::string nick, long score);
 };
 
 

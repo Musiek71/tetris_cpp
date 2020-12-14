@@ -41,7 +41,7 @@ public:
     Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr);
     virtual ~Menu();
 
-    int run();
+    void run();
 
     void updateVolumeText();
     void updateWidthText();

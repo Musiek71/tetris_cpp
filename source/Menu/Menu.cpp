@@ -49,6 +49,12 @@ Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumeP
                             "Exit",
                             &textFont);
 
+    leaderboardButton = new Button(sf::Vector2f(window->getSize().x - 200, 0),
+                            sf::Vector2f(200, 100),
+                            sf::Color::Blue,
+                            "Scores",
+                            &textFont);
+
     increaseWidthButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 50, window->getSize().y / 4  - 50),
                                      sf::Vector2f(50, 50),
                                      sf::Color::Blue,
@@ -92,6 +98,7 @@ Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumeP
 Menu::~Menu() {
     delete startButton;
     delete exitButton;
+    delete leaderboardButton;
     delete increaseWidthButton;
     delete decreaseWidthButton;
     delete increaseHeightButton;
@@ -100,7 +107,7 @@ Menu::~Menu() {
     delete decreaseVolumeButton;
 }
 
-int Menu::run() {
+void Menu::run() {
 
     sf::Texture backgroundText;
     backgroundText.loadFromFile("background.png");
@@ -128,6 +135,10 @@ int Menu::run() {
 
         if (exitButton->updateButton(mouseViewPos)) {
             *gameStatePtr = EXIT;
+        }
+
+        if (leaderboardButton->updateButton(mouseViewPos)) {
+            *gameStatePtr = LEADERBOARD;
         }
 
         if (increaseWidthButton->updateButton(mouseViewPos)) {
@@ -176,6 +187,7 @@ int Menu::run() {
         window->draw(background);
         window->draw(*startButton);
         window->draw(*exitButton);
+        window->draw(*leaderboardButton);
 
         window->draw(*increaseWidthButton);
         window->draw(*decreaseWidthButton);
@@ -193,7 +205,6 @@ int Menu::run() {
         window->display();
     }
 
-    return 0;
 }
 
 void Menu::updateVolumeText() {

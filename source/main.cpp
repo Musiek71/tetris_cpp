@@ -7,9 +7,6 @@
 
 
 int main() {
-    //TODO state machine for HOLD and clearing animations to implement in the future??
-    //TODO state machine for main menu
-    //TODO sounds
     //TODO basic layout with background placeholder
     //TODO HOLD function
     //TODO errors while loading things
@@ -17,6 +14,7 @@ int main() {
     //TODO game over
     //TODO leaderboards
     //TODO fix view at main menu after game over
+    //TODO fix scores file opening when file doesn't exist
 
     int volume = 0;
     int score = 0;
@@ -28,33 +26,36 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    Leaderboard leaderboard(&window, "scores.txt", &gameState);
-
-    std::cout << "xD" << std::endl;
 
 
-//    while (window.isOpen()) {
-//        if (gameState == EXIT)
-//            break;
-//
-//        switch (gameState) {
-//            case MENU: {
-//                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
-//                menu.run();
-//                break;
-//            }
-//
-//            case GAME: {
-//                Game game(boardWidth, boardHeight, &window, volume, &gameState, &score, &level);
-//                game.run();
-//                break;
-//            }
-//
-//            case GAMEOVER: {
-//                gameState = MENU; // temporary
-//            }
-//        }
-//    }
+    while (window.isOpen()) {
+        if (gameState == EXIT)
+            break;
+
+        switch (gameState) {
+            case MENU: {
+                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
+                menu.run();
+                break;
+            }
+
+            case GAME: {
+                Game game(boardWidth, boardHeight, &window, volume, &gameState, &score, &level);
+                game.run();
+                break;
+            }
+
+            case GAMEOVER: {
+                gameState = MENU; // temporary
+            }
+
+            case LEADERBOARD: {
+                Leaderboard leaderboard(&window, "scores.txt", &gameState);
+                leaderboard.run();
+                break;
+            }
+        }
+    }
 
 //    Game game( 10, 20, &window, 0);
 //    game.run();

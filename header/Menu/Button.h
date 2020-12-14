@@ -15,6 +15,7 @@ private:
     sf::Font* buttonFont;
     sf::Text buttonText;
     bool isPressed = false;
+    bool isReleased = true;
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 public:

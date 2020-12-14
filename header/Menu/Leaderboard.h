@@ -9,11 +9,16 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Score.h"
+#include "../../header/StatesEnum.h"
+#include "Button.h"
 
 class Leaderboard {
 private:
     sf::RenderWindow* window;
     sf::Font textFont;
+    sf::Text leaderboardText;
+
+    Button* menuButton;
 
     std::vector<Score*> scores;
     std::string filename;
@@ -26,6 +31,8 @@ public:
     virtual ~Leaderboard();
 
     void sortScores();
+
+    void run();
 };
 
 

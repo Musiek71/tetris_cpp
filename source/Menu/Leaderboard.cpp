@@ -15,14 +15,32 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
     this->gameStatePtr = gameStatePtr;
     this->filename = filename;
 
-    //open scores file
-    ifstream inputStream;
-    inputStream.open(filename, ios::in);
+    //initializing window
+    window->setSize(sf::Vector2u(800, 800));
+
+    sf::View gameView(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y));
+    window->setView(gameView);
 
     //open the main font
     if (!textFont.loadFromFile("gbfont.ttf")) {
         std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
     }
+
+    //init for top text
+    leaderboardText.setFont(textFont);
+    leaderboardText.setCharacterSize(32);
+    leaderboardText.setString("Leaderboard:");
+    leaderboardText.setPosition(window->getSize().x / 2 - leaderboardText.getGlobalBounds().width / 2, 0);
+
+    menuButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 100, window->getSize().y - 100),
+                             sf::Vector2f(200, 100),
+                             sf::Color::Blue,
+                             "Menu",
+                             &textFont);
+
+    //open scores file
+    ifstream inputStream;
+    inputStream.open(filename, ios::in);
 
     //add scores to scores vector
     string line;
@@ -31,7 +49,7 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
             //Create a new stringstream to parse text file's line to the Score class
             stringstream ss(line);
             string nick;
-            int score;
+            long score;
             ss >> nick >> score;
             scores.push_back(new Score(nick, score, &textFont));
         }
@@ -43,9 +61,13 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
 
     sortScores();
 
+    //remove excessing scores
+    while (scores.size() > 10)
+        scores.pop_back();
+
     //update scores and their positions on the screen
     for (int i = 0; i < scores.size(); i++) {
-        scores[i]->update(50, 50 * (i + 1), i + 1);
+        scores[i]->update(50, 50 + 50 * (i + 1), i + 1);
     }
 
 }
@@ -53,11 +75,50 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
 Leaderboard::~Leaderboard() {
     for (Score* single : scores)
         delete single;
+    delete menuButton;
 }
 
 void Leaderboard::sortScores() {
     //sort scores using stl's sort and a lambda expression
     sort(scores.begin(), scores.end(), [](Score* first, Score* second) {
-        return first->getScore() < second->getScore();
+        return first->getScore() > second->getScore();
     });
+}
+
+void Leaderboard::run() {
+    sf::Texture backgroundText;
+    backgroundText.loadFromFile("background.png");
+    sf::Sprite background;
+    background.setTexture(backgroundText);
+    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
+
+
+    while (window->isOpen()) {
+
+        if (*gameStatePtr == MENU)
+            break;
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window->close();
+        }
+
+        sf::Vector2f mouseViewPos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+
+        if (menuButton->updateButton(mouseViewPos)) {
+            *gameStatePtr = MENU;
+        }
+
+        window->clear();
+        window->draw(background);
+        window->draw(leaderboardText);
+        window->draw(*menuButton);
+
+        for (Score* single : scores)
+            window->draw(*single);
+
+        window->display();
+    }
+
 }

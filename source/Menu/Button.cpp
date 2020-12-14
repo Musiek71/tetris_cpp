@@ -15,17 +15,15 @@ bool Button::mouseOnButton(sf::Vector2f mousePos) {
 }
 
 bool Button::updateButton(sf::Vector2f mousePos) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isPressed)
-        return false;
-    else {
-        isPressed = false;
-        buttonShape.setFillColor(this->buttonColor);
-    }
 
     if (buttonShape.getGlobalBounds().contains(mousePos)) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             isPressed = true;
+            isReleased = false;
             buttonShape.setFillColor(sf::Color::Red);
+        } else if (isPressed) {
+            isPressed = false;
+            isReleased = true;
             return true;
         }
     }

@@ -19,6 +19,11 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
     ifstream inputStream;
     inputStream.open(filename, ios::in);
 
+    //open the main font
+    if (!textFont.loadFromFile("gbfont.ttf")) {
+        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
+    }
+
     //add scores to scores vector
     string line;
     if (inputStream.is_open()) {
@@ -28,7 +33,7 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
             string nick;
             int score;
             ss >> nick >> score;
-            scores.push_back(new Score(nick, score));
+            scores.push_back(new Score(nick, score, &textFont));
         }
     } else {
         cout << "Unable to open file:" << filename << endl;
@@ -37,6 +42,11 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
     inputStream.close();
 
     sortScores();
+
+    //update scores and their positions on the screen
+    for (int i = 0; i < scores.size(); i++) {
+        scores[i]->update(50, 50 * (i + 1), i + 1);
+    }
 
 }
 

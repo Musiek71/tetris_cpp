@@ -13,6 +13,7 @@
 class Leaderboard {
 private:
     sf::RenderWindow* window;
+    sf::Font textFont;
 
     std::vector<Score*> scores;
     std::string filename;

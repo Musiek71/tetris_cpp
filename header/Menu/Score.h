@@ -7,13 +7,20 @@
 
 
 #include <string>
+#include <SFML/Graphics.hpp>
 
-class Score {
+class Score : public sf::Drawable {
 private:
+    sf::Text scoreText;
+    sf::Font* font;
+
     std::string nick;
     int score = 0;
+protected:
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+
 public:
-    Score(const std::string &nick, int score);
+    Score(const std::string &nick, int score, sf::Font* font);
 
     const std::string &getNick() const;
 
@@ -22,6 +29,10 @@ public:
     int getScore() const;
 
     void setScore(int score);
+
+    void update(int x, int y, int position);
+
+    void update(int x, int y, int position, std::string nick, int score);
 };
 
 

@@ -25,7 +25,6 @@ bool Game::run() {
 
     Piece* currentPiece = pieceFactory->getPiece();
     Piece* nextPiece = pieceFactory->getPiece();
-    //nextPiece->setPiecePosition(X_OFFSET / 32 + BOARD_WIDTH + 3, 10, false);
     Piece* ghostPiece = pieceFactory->getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
@@ -80,11 +79,16 @@ bool Game::run() {
 
     while (window->isOpen()) {
 
+        if (*gameStatePtr == MENU)
+            break;
+
         if (gameOver) {
             std::cout << "Game over!\n";
             std::cout << "Score:" << this->score << "\nLevel:" << this->level << std::endl;
 
             *gameStatePtr = GAMEOVER;
+            *levelPtr = level;
+            *scorePtr = score;
 
             delete currentPiece;
             delete nextPiece;
@@ -102,6 +106,8 @@ bool Game::run() {
                     rotateLeft(currentPiece, ghostPiece);
                 else if (event.key.code == sf::Keyboard::X)
                     rotateRight(currentPiece, ghostPiece);
+                else if (event.key.code == sf::Keyboard::Escape)
+                    *gameStatePtr = MENU;
             }
         }
 
@@ -110,11 +116,11 @@ bool Game::run() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
             fastFallFlag = true;
             keyClock.restart();
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.08) {
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.1) { //0.08
             moveLeft(currentPiece, ghostPiece);
             keyClock.restart();
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.08) {
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.1) {
             moveRight(currentPiece, ghostPiece);
             keyClock.restart();
         }
@@ -130,7 +136,7 @@ bool Game::run() {
 
 
         frameTime = frameClock.getElapsedTime();
-        if (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.05)) {
+        if (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.025)) {
             frameClock.restart();
 
             //if fast falling, increment the score
@@ -179,7 +185,7 @@ bool Game::run() {
     return true;
 }
 
-Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr) {
+Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr) {
     if (boardWidth >= 5)
         this->boardWidth = boardWidth + 2; //side walls
     else
@@ -193,10 +199,10 @@ Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volu
     this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2);
 
     this->window = window;
-
     this->volume = volume;
-
     this->gameStatePtr = gameStatePtr;
+    this->scorePtr = scorePtr;
+    this->levelPtr = levelPtr;
 }
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
@@ -296,7 +302,7 @@ void Game::updateScore(int clearedRows) {
 }
 
 void Game::updateLevel() {
-    this->level = this->totalRows / 10 + 1;
+    this->level = this->totalRows / 5 + 1;
 }
 
 Game::~Game() {

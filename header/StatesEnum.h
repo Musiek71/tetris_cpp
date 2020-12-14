@@ -12,7 +12,8 @@ enum GameState {
     MENU,
     GAME,
     GAMEOVER,
-    LEADERBOARD
+    LEADERBOARD,
+    EXIT
 };
 
 #endif //TETRIS_CPP_STATESENUM_H

@@ -20,9 +20,13 @@ private:
     Button* increaseWidthButton;
     Button* decreaseWidthButton;
 
+    Button* increaseHeightButton;
+    Button* decreaseHeightButton;
+
     Button* increaseVolumeButton;
     Button* decreaseVolumeButton;
 
+    sf::Font textFont;
     sf::Text widthText;
     sf::Text heightText;
     sf::Text volumeText;
@@ -38,6 +42,10 @@ public:
     virtual ~Menu();
 
     int run();
+
+    void updateVolumeText();
+    void updateWidthText();
+    void updateHeightText();
 
 
 };

@@ -30,6 +30,8 @@ private:
     float volume = 100;
 
     int* gameStatePtr;
+    int* scorePtr;
+    int* levelPtr;
 
     sf::RenderWindow* window;
 
@@ -45,7 +47,7 @@ private:
     void updateLevel();
 
 public:
-    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr);
+    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr);
 
     virtual ~Game();
 

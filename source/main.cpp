@@ -3,6 +3,7 @@
 #include "../header/Menu/Button.h"
 #include "../header/StatesEnum.h"
 #include "../header/Menu/Menu.h"
+#include "../header/Menu/Leaderboard.h"
 
 
 int main() {
@@ -15,8 +16,9 @@ int main() {
     //TODO make rotation with keypressed/keyreleased flag
     //TODO game over
     //TODO leaderboards
+    //TODO fix view at main menu after game over
 
-    int volume = 10;
+    int volume = 0;
     int score = 0;
     int level = 1;
     int boardWidth = 10;
@@ -26,26 +28,33 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
+    Leaderboard leaderboard(&window, "scores.txt", &gameState);
 
-    while (window.isOpen()) {
-        switch (gameState) {
-            case MENU: {
-                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
-                menu.run();
-                break;
-            }
+    std::cout << "xD" << std::endl;
 
-            case GAME: {
-                Game game(boardWidth, boardHeight, &window, volume, &gameState);
-                game.run();
-                break;
-            }
 
-            case GAMEOVER: {
-                gameState = MENU; // temporary
-            }
-        }
-    }
+//    while (window.isOpen()) {
+//        if (gameState == EXIT)
+//            break;
+//
+//        switch (gameState) {
+//            case MENU: {
+//                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
+//                menu.run();
+//                break;
+//            }
+//
+//            case GAME: {
+//                Game game(boardWidth, boardHeight, &window, volume, &gameState, &score, &level);
+//                game.run();
+//                break;
+//            }
+//
+//            case GAMEOVER: {
+//                gameState = MENU; // temporary
+//            }
+//        }
+//    }
 
 //    Game game( 10, 20, &window, 0);
 //    game.run();

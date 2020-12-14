@@ -2,6 +2,7 @@
 // Created by musiek on 12/12/20.
 //
 
+#include <iostream>
 #include "../../header/Menu/Button.h"
 
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -16,28 +17,31 @@ bool Button::mouseOnButton(sf::Vector2f mousePos) {
 bool Button::updateButton(sf::Vector2f mousePos) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isPressed)
         return false;
-    else
+    else {
         isPressed = false;
+        buttonShape.setFillColor(this->buttonColor);
+    }
 
     if (buttonShape.getGlobalBounds().contains(mousePos)) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             isPressed = true;
+            buttonShape.setFillColor(sf::Color::Red);
             return true;
         }
     }
     return false;
 }
 
-Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, std::string text, std::string fontName) {
+Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, std::string text, sf::Font* font) {
     this->buttonColor = buttonColor;
 
     buttonShape.setPosition(position);
     buttonShape.setSize(size);
     buttonShape.setFillColor(buttonColor);
 
-    buttonFont.loadFromFile(fontName);
+    buttonFont = font;
 
-    buttonText.setFont(buttonFont);
+    buttonText.setFont(*buttonFont);
     buttonText.setCharacterSize(buttonShape.getGlobalBounds().height / 4);
     buttonText.setString(text);
     buttonText.setPosition(buttonShape.getPosition().x,

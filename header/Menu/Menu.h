@@ -12,6 +12,10 @@
 class Menu {
 private:
     sf::RenderWindow* window;
+    sf::Font textFont;
+    sf::Text widthText;
+    sf::Text heightText;
+    sf::Text volumeText;
 
     Button* startButton;
     Button* exitButton;
@@ -25,11 +29,6 @@ private:
 
     Button* increaseVolumeButton;
     Button* decreaseVolumeButton;
-
-    sf::Font textFont;
-    sf::Text widthText;
-    sf::Text heightText;
-    sf::Text volumeText;
 
     int* widthPtr;
     int* heightPtr;

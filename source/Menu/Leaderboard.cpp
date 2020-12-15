@@ -9,10 +9,11 @@
 
 using namespace std;
 
-Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameStatePtr) {
+Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameStatePtr, int* scorePtr) {
     //assign fields
     this->window = window;
     this->gameStatePtr = gameStatePtr;
+    this->scorePtr = scorePtr;
     this->filename = filename;
 
     //initializing window
@@ -55,6 +56,10 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
         }
     } else {
         cout << "Unable to open file:" << filename << endl;
+        cout << "Making a new scores.txt file" << endl;
+        ofstream outputStream;
+        outputStream.open(filename, ios::out);
+        outputStream.close();
     }
 
     inputStream.close();
@@ -86,6 +91,7 @@ void Leaderboard::sortScores() {
 }
 
 void Leaderboard::run() {
+
     sf::Texture backgroundText;
     backgroundText.loadFromFile("background.png");
     sf::Sprite background;
@@ -93,9 +99,10 @@ void Leaderboard::run() {
     background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
 
 
+
     while (window->isOpen()) {
 
-        if (*gameStatePtr == MENU)
+        if (*gameStatePtr != LEADERBOARD)
             break;
 
         sf::Event event;
@@ -120,5 +127,4 @@ void Leaderboard::run() {
 
         window->display();
     }
-
 }

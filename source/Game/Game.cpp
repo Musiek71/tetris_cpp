@@ -116,11 +116,11 @@ bool Game::run() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
             fastFallFlag = true;
             keyClock.restart();
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.1) { //0.08
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.09) { //0.08
             moveLeft(currentPiece, ghostPiece);
             keyClock.restart();
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.1) {
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.09) {
             moveRight(currentPiece, ghostPiece);
             keyClock.restart();
         }
@@ -185,7 +185,7 @@ bool Game::run() {
     return true;
 }
 
-Game::Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr) {
+Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr) {
     if (boardWidth >= 5)
         this->boardWidth = boardWidth + 2; //side walls
     else

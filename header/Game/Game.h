@@ -47,7 +47,7 @@ private:
     void updateLevel();
 
 public:
-    Game(int boardWidth, int boardHeight, sf::RenderWindow* window, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr);
+    Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr);
 
     virtual ~Game();
 

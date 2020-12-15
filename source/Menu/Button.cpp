@@ -24,8 +24,13 @@ bool Button::updateButton(sf::Vector2f mousePos) {
         } else if (isPressed) {
             isPressed = false;
             isReleased = true;
+            buttonShape.setFillColor(sf::Color::Blue);
             return true;
         }
+    } else if (isPressed) {
+        isPressed = false;
+        isReleased = true;
+        buttonShape.setFillColor(sf::Color::Blue);
     }
     return false;
 }

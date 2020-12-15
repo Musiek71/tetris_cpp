@@ -4,6 +4,7 @@
 #include "../header/StatesEnum.h"
 #include "../header/Menu/Menu.h"
 #include "../header/Menu/Leaderboard.h"
+#include "../header/Menu/GameOver.h"
 
 
 int main() {
@@ -19,14 +20,12 @@ int main() {
     int volume = 0;
     int score = 0;
     int level = 1;
-    int boardWidth = 10;
-    int boardHeight = 20;
+    int boardWidth = 5;
+    int boardHeight = 10;
     int gameState = MENU;
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
-
-
 
     while (window.isOpen()) {
         if (gameState == EXIT)
@@ -40,17 +39,19 @@ int main() {
             }
 
             case GAME: {
-                Game game(boardWidth, boardHeight, &window, volume, &gameState, &score, &level);
+                Game game(&window, boardWidth, boardHeight, volume, &gameState, &score, &level);
                 game.run();
                 break;
             }
 
             case GAMEOVER: {
-                gameState = MENU; // temporary
+                GameOver gameOver(&window, "scores.txt", &gameState, &score);
+                gameOver.run();
+                break;
             }
 
             case LEADERBOARD: {
-                Leaderboard leaderboard(&window, "scores.txt", &gameState);
+                Leaderboard leaderboard(&window, "scores.txt", &gameState, &score);
                 leaderboard.run();
                 break;
             }

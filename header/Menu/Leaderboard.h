@@ -17,6 +17,7 @@ private:
     sf::RenderWindow* window;
     sf::Font textFont;
     sf::Text leaderboardText;
+    sf::View gameView;
 
     Button* menuButton;
 
@@ -24,15 +25,17 @@ private:
     std::string filename;
 
     int* gameStatePtr;
+    int* scorePtr;
 
 public:
-    Leaderboard(sf::RenderWindow* window, std::string filename, int* gameStatePtr);
+    Leaderboard(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr);
 
     virtual ~Leaderboard();
 
     void sortScores();
 
     void run();
+
 };
 
 

@@ -35,6 +35,8 @@ private:
     int* levelPtr;
 
     sf::RenderWindow* window;
+    sf::Font textFont;
+    sf::Text pausedText;
 
     bool moveLeft(Piece *piece, Piece* ghostPiece);
     bool moveRight(Piece *piece, Piece* ghostPiece);

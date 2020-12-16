@@ -23,6 +23,15 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
     this->scorePtr = scorePtr;
     this->levelPtr = levelPtr;
     this->ghostFlag = ghostFlag;
+
+    if (!textFont.loadFromFile("gbfont.ttf")) {
+        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
+    }
+    this->pausedText.setFont(textFont);
+    this->pausedText.setCharacterSize(48);
+    this->pausedText.setString("Paused");
+    this->pausedText.setPosition(window->getSize().x / 2 - pausedText.getGlobalBounds().width / 2,
+                                 window->getSize().y / 2 - pausedText.getCharacterSize() / 2);
 }
 
 bool Game::run() {
@@ -69,6 +78,7 @@ bool Game::run() {
     float deltaTime = 0;
 
     bool fastFallFlag = false;
+    bool pausedFlag = false;
 
     sf::Clock frameClock;
     sf::Clock keyClock;
@@ -123,27 +133,34 @@ bool Game::run() {
             if (event.type == sf::Event::Closed)
                 window->close();
             else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Z)
-                    rotateLeft(currentPiece, ghostPiece);
-                else if (event.key.code == sf::Keyboard::X)
-                    rotateRight(currentPiece, ghostPiece);
+                if (event.key.code == sf::Keyboard::Z) {
+                    if (!pausedFlag)
+                        rotateLeft(currentPiece, ghostPiece);
+                }
+                else if (event.key.code == sf::Keyboard::X) {
+                    if (!pausedFlag)
+                        rotateRight(currentPiece, ghostPiece);
+                }
                 else if (event.key.code == sf::Keyboard::Escape)
                     *gameStatePtr = MENU;
+                else if (event.key.code == sf::Keyboard::P)
+                    pausedFlag = !pausedFlag;
             }
         }
 
         keyTime = keyClock.getElapsedTime();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
-            fastFallFlag = true;
-            keyClock.restart();
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.09) { //0.08
-            moveLeft(currentPiece, ghostPiece);
-            keyClock.restart();
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.09) {
-            moveRight(currentPiece, ghostPiece);
-            keyClock.restart();
+        if (!pausedFlag) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
+                fastFallFlag = true;
+                keyClock.restart();
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.09) { //0.08
+                moveLeft(currentPiece, ghostPiece);
+                keyClock.restart();
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && keyTime.asSeconds() > 0.09) {
+                moveRight(currentPiece, ghostPiece);
+                keyClock.restart();
+            }
         }
 
         window->clear();
@@ -154,11 +171,13 @@ bool Game::run() {
         window->draw(*currentPiece);
         if (ghostFlag)
             window->draw(*ghostPiece);
+        if (pausedFlag)
+            window->draw(pausedText);
         window->display();
 
 
         frameTime = frameClock.getElapsedTime();
-        if (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.025)) {
+        if (!pausedFlag && (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.025))) {
             frameClock.restart();
 
             //if fast falling, increment the score

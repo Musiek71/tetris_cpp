@@ -8,6 +8,7 @@
 Score::Score(const std::string &nick, long score, sf::Font* font) {
     this->nick = nick;
     this->score = score;
+    nickText.setFont(*font);
     scoreText.setFont(*font);
 }
 
@@ -27,18 +28,23 @@ void Score::setScore(long score) {
     Score::score = score;
 }
 
-void Score::update(int x, int y, int position) {
-    scoreText.setPosition(x, y);
-    scoreText.setString(std::to_string(position) + "." + nick + ":" + std::to_string(score));
+void Score::update(int screenWidth, int y, int position) {
+    nickText.setString(nick);
+    nickText.setCharacterSize(32);
+    nickText.setPosition(screenWidth / 5.f - nickText.getGlobalBounds().width / 2, y);
+
+    scoreText.setString(std::to_string(score));
     scoreText.setCharacterSize(32);
+    scoreText.setPosition(screenWidth / 5.f * 4 - scoreText.getGlobalBounds().width / 2, y);
 }
 
-void Score::update(int x, int y, int position, std::string nick, long score) {
+void Score::update(int screenWidth, int y, int position, std::string nick, long score) {
     this->nick = nick;
     this->score = score;
-    this->update(x, y, position);
+    this->update(screenWidth, y, position);
 }
 
 void Score::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(nickText);
     target.draw(scoreText);
 }

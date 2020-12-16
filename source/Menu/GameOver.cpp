@@ -87,7 +87,7 @@ void GameOver::run() {
                     if (nick.length() > 0)
                         nick.erase(nick.length() - 1, 1);
                 }
-                else {
+                else if (event.text.unicode != ' ' && event.text.unicode >= 'A' && event.text.unicode <= 'z') {
                     if (nick.length() < 9)
                         nick += event.text.unicode;
                 }

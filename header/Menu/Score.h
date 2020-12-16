@@ -11,8 +11,9 @@
 
 class Score : public sf::Drawable {
 private:
-    sf::Text scoreText;
     sf::Font* font;
+    sf::Text nickText;
+    sf::Text scoreText;
 
     std::string nick;
     long score = 0;
@@ -30,9 +31,9 @@ public:
 
     void setScore(long score);
 
-    void update(int x, int y, int position);
+    void update(int screenWidth, int y, int position);
 
-    void update(int x, int y, int position, std::string nick, long score);
+    void update(int screenWidth, int y, int position, std::string nick, long score);
 };
 
 

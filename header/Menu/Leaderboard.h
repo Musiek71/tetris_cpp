@@ -17,7 +17,6 @@ private:
     sf::RenderWindow* window;
     sf::Font textFont;
     sf::Text leaderboardText;
-    sf::View gameView;
 
     Button* menuButton;
 

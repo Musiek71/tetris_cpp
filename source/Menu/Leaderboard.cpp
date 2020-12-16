@@ -72,7 +72,7 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
 
     //update scores and their positions on the screen
     for (int i = 0; i < scores.size(); i++) {
-        scores[i]->update(50, 50 + 50 * (i + 1), i + 1);
+        scores[i]->update(window->getSize().x, 50 + 50 * (i + 1), i + 1);
     }
 
 }

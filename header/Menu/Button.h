@@ -10,6 +10,8 @@
 
 class Button : public sf::Drawable {
 private:
+    sf::Texture releasedTexture;
+    sf::Texture pressedTexture;
     sf::Color buttonColor;
     sf::RectangleShape buttonShape;
     sf::Font* buttonFont;

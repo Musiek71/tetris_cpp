@@ -12,7 +12,8 @@ int main() {
     //TODO unite all the pointers as a structure to clean up
     //TODO game over sound
     //TODO button textures
-    //TODO ghost as an option
+    //TODO resource manager to save memory
+    //TODO logo on the main screen
 
     int volume = 0;
     int score = 0;
@@ -25,13 +26,14 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
+    Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag);
+
     while (window.isOpen()) {
         if (gameState == EXIT)
             break;
 
         switch (gameState) {
             case MENU: {
-                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag);
                 menu.run();
                 break;
             }

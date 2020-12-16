@@ -109,6 +109,8 @@ void Leaderboard::run() {
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window->close();
+            else if (event.key.code == sf::Keyboard::Escape)
+                *gameStatePtr = MENU;
         }
 
         sf::Vector2f mouseViewPos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));

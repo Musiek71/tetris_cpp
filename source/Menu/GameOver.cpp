@@ -4,10 +4,11 @@
 
 #include "../../header/Menu/GameOver.h"
 
-GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStatePtr, int *scorePtr) {
+GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStatePtr, int *scorePtr, int* levelPtr) {
     this->window = window;
     this->gameStatePtr = gameStatePtr;
     this->scorePtr = scorePtr;
+    this->lvlPtr = levelPtr;
     this->filename = filename;
 
     //initializing window
@@ -32,10 +33,15 @@ GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStat
     scoreText.setString("Score:" + std::to_string(*scorePtr));
     scoreText.setPosition(window->getSize().x / 2 - scoreText.getGlobalBounds().width / 2, window->getSize().y / 8);
 
+    levelText.setFont(textFont);
+    levelText.setCharacterSize(32);
+    levelText.setString("Level:" + std::to_string(*levelPtr));
+    levelText.setPosition(window->getSize().x / 2 - levelText.getGlobalBounds().width / 2, window->getSize().y * 2 / 8);
+
     nickText.setFont(textFont);
     nickText.setCharacterSize(48);
     nickText.setString("Nick:" + nick);
-    nickText.setPosition(window->getSize().x / 2 - nickText.getGlobalBounds().width / 2, window->getSize().y / 4);
+    nickText.setPosition(window->getSize().x / 2 - nickText.getGlobalBounds().width / 2, window->getSize().y / 8 * 3);
 
     menuButton = new Button(sf::Vector2f(window->getSize().x / 2 - 100, window->getSize().y - 100),
                             sf::Vector2f(200, 100),
@@ -92,7 +98,7 @@ void GameOver::run() {
                         nick += event.text.unicode;
                 }
                 nickText.setString("Nick:" + nick);
-                nickText.setPosition(window->getSize().x / 2 - nickText.getGlobalBounds().width / 2, window->getSize().y / 4);
+                nickText.setPosition(window->getSize().x / 2 - nickText.getGlobalBounds().width / 2, window->getSize().y / 8 * 3);
             }
         }
 
@@ -115,6 +121,7 @@ void GameOver::run() {
 
         window->draw(topText);
         window->draw(scoreText);
+        window->draw(levelText);
         window->draw(nickText);
 
         window->draw(*menuButton);

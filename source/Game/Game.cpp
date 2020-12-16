@@ -4,6 +4,27 @@
 
 #include "../../header/Game/Game.h"
 
+Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr, bool ghostFlag) {
+    if (boardWidth >= 5)
+        this->boardWidth = boardWidth + 2; //side walls
+    else
+        this->boardWidth = 5 + 2;
+    if (boardHeight >= 10)
+        this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
+    else
+        this->boardHeight = 10 + 4;
+
+    this->gameBoard = new Board(this->boardWidth, this->boardHeight);
+    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2);
+
+    this->window = window;
+    this->volume = volume;
+    this->gameStatePtr = gameStatePtr;
+    this->scorePtr = scorePtr;
+    this->levelPtr = levelPtr;
+    this->ghostFlag = ghostFlag;
+}
+
 bool Game::run() {
 
     if (!gameBoard->init("tileset.png", 32)) {
@@ -131,7 +152,8 @@ bool Game::run() {
         window->draw(scoreBoard);
         window->draw(*gameBoard);
         window->draw(*currentPiece);
-        window->draw(*ghostPiece);
+        if (ghostFlag)
+            window->draw(*ghostPiece);
         window->display();
 
 
@@ -183,26 +205,6 @@ bool Game::run() {
     }
 
     return true;
-}
-
-Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr) {
-    if (boardWidth >= 5)
-        this->boardWidth = boardWidth + 2; //side walls
-    else
-        this->boardWidth = 5 + 2;
-    if (boardHeight >= 10)
-        this->boardHeight = boardHeight + 4; //bottom wall + three rows for piece spawning
-    else
-        this->boardHeight = 10 + 4;
-
-    this->gameBoard = new Board(this->boardWidth, this->boardHeight);
-    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2);
-
-    this->window = window;
-    this->volume = volume;
-    this->gameStatePtr = gameStatePtr;
-    this->scorePtr = scorePtr;
-    this->levelPtr = levelPtr;
 }
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {

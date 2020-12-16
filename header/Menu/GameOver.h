@@ -18,6 +18,7 @@ private:
     sf::Font textFont;
     sf::Text topText;
     sf::Text scoreText;
+    sf::Text levelText;
     sf::Text nickText;
 
     Button* menuButton;
@@ -26,12 +27,13 @@ private:
 
     int* gameStatePtr;
     int* scorePtr;
+    int* lvlPtr;
 
     std::string filename;
     std::string nick;
 
 public:
-    GameOver(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr);
+    GameOver(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr, int* levelPtr);
 
     virtual ~GameOver();
 

@@ -1,28 +1,26 @@
-#include <iostream>
 #include "../header/Game/Game.h"
 #include "../header/Menu/Button.h"
-#include "../header/StatesEnum.h"
 #include "../header/Menu/Menu.h"
 #include "../header/Menu/Leaderboard.h"
 #include "../header/Menu/GameOver.h"
 
 
 int main() {
-    //TODO basic layout with background placeholder
-    //TODO HOLD function
+
     //TODO errors while loading things
-    //TODO make rotation with keypressed/keyreleased flag
-    //TODO game over
-    //TODO leaderboards
-    //TODO fix view at main menu after game over
-    //TODO fix scores file opening when file doesn't exist
+    //TODO MAIN MENU LOOK
+    //TODO unite all the pointers as a structure to clean up
+    //TODO game over sound
+    //TODO button textures
+    //TODO ghost as an option
 
     int volume = 0;
     int score = 0;
     int level = 1;
-    int boardWidth = 5;
-    int boardHeight = 10;
+    int boardWidth = 10;
+    int boardHeight = 20;
     int gameState = MENU;
+    bool ghostFlag = true;
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
@@ -33,19 +31,19 @@ int main() {
 
         switch (gameState) {
             case MENU: {
-                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState);
+                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag);
                 menu.run();
                 break;
             }
 
             case GAME: {
-                Game game(&window, boardWidth, boardHeight, volume, &gameState, &score, &level);
+                Game game(&window, boardWidth, boardHeight, (float)volume, &gameState, &score, &level, ghostFlag);
                 game.run();
                 break;
             }
 
             case GAMEOVER: {
-                GameOver gameOver(&window, "scores.txt", &gameState, &score);
+                GameOver gameOver(&window, "scores.txt", &gameState, &score, &level);
                 gameOver.run();
                 break;
             }
@@ -55,11 +53,12 @@ int main() {
                 leaderboard.run();
                 break;
             }
+
+            default:
+                gameState = EXIT;
+                break;
         }
     }
-
-//    Game game( 10, 20, &window, 0);
-//    game.run();
 
     return 0;
 }

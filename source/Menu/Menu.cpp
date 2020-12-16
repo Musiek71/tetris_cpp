@@ -5,12 +5,13 @@
 #include <iostream>
 #include "../../header/Menu/Menu.h"
 
-Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr) {
+Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr) {
     this-> window = window;
     this->widthPtr = widthPtr;
     this->heightPtr = heightPtr;
     this->volumePtr = volumePtr;
     this->gameStatePtr = gameStatePtr;
+    this->ghostFlagPtr = ghostFlagPtr;
 
     window->setSize(sf::Vector2u(800, 800));
 
@@ -23,73 +24,98 @@ Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumeP
     widthText.setFont(textFont);
     heightText.setFont(textFont);
     volumeText.setFont(textFont);
+    ghostText.setFont(textFont);
 
     widthText.setString("Width:" + std::to_string(*widthPtr));
-    widthText.setCharacterSize(32);
-    widthText.setPosition(window->getSize().x / 2 - 100 - widthText.getGlobalBounds().width, window->getSize().y / 4 - 50);
+    widthText.setCharacterSize(24);
+    widthText.setPosition(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                          window->getSize().y / 10.f * 2);
 
     heightText.setString("Height:" + std::to_string(*heightPtr));
-    heightText.setCharacterSize(32);
-    heightText.setPosition(window->getSize().x / 2 - 100 - heightText.getGlobalBounds().width, window->getSize().y / 4 * 2 - 50);
+    heightText.setCharacterSize(24);
+    heightText.setPosition(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                           window->getSize().y / 10.f * 4);
 
     volumeText.setString("Volume:" + std::to_string(*volumePtr));
-    volumeText.setCharacterSize(32);
-    volumeText.setPosition(window->getSize().x / 2 - 100 - volumeText.getGlobalBounds().width, window->getSize().y / 4 * 3 - 50);
+    volumeText.setCharacterSize(24);
+    volumeText.setPosition(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                           window->getSize().y / 10.f * 6);
 
+    ghostText.setString("Ghost:");
+    ghostText.setCharacterSize(24);
+    ghostText.setPosition(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                          window->getSize().y / 10.f * 8);
 
-    startButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 100, 0),
+    startButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
+                                            window->getSize().y / 4.f * 1),
                              sf::Vector2f(200, 100),
                              sf::Color::Blue,
                              "Start",
                              &textFont);
 
-    exitButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 100, window->getSize().y - 100),
+    leaderboardButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
+                                                window->getSize().y / 4.f * 2),
+                                   sf::Vector2f(200, 100),
+                                   sf::Color::Blue,
+                                   "Scores",
+                                   &textFont);
+
+
+    exitButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
+                                            window->getSize().y / 4.f * 3),
                             sf::Vector2f(200, 100),
                             sf::Color::Blue,
                             "Exit",
                             &textFont);
 
-    leaderboardButton = new Button(sf::Vector2f(window->getSize().x - 200, 0),
-                            sf::Vector2f(200, 100),
-                            sf::Color::Blue,
-                            "Scores",
-                            &textFont);
-
-    increaseWidthButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 50, window->getSize().y / 4  - 50),
+    increaseWidthButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                                                        window->getSize().y / 10.f * 3  - 50),
                                      sf::Vector2f(50, 50),
                                      sf::Color::Blue,
                                      "Inc",
                                      &textFont);
 
-    decreaseWidthButton = new Button(sf::Vector2f(window->getSize().x/ 2 + 50, window->getSize().y / 4 - 50),
+    decreaseWidthButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
+                                                        window->getSize().y / 10.f * 3 - 50),
                                      sf::Vector2f(50, 50),
                                      sf::Color::Blue,
                                      "Dec",
                                      &textFont);
 
-    increaseHeightButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 50, window->getSize().y / 4 * 2  - 50),
+    increaseHeightButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                                                        window->getSize().y / 10.f * 5  - 50),
                                       sf::Vector2f(50, 50),
                                       sf::Color::Blue,
                                       "Inc",
                                       &textFont);
 
-    decreaseHeightButton = new Button(sf::Vector2f(window->getSize().x/ 2 + 50, window->getSize().y / 4 * 2 - 50),
+    decreaseHeightButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
+                                                        window->getSize().y / 10.f * 5 - 50),
                                       sf::Vector2f(50, 50),
                                       sf::Color::Blue,
                                       "Dec",
                                       &textFont);
 
-    increaseVolumeButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 50, window->getSize().y / 4 * 3 - 50),
+    increaseVolumeButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                                                        window->getSize().y / 10.f * 7  - 50),
                                       sf::Vector2f(50, 50),
                                       sf::Color::Blue,
                                       "Inc",
                                       &textFont);
 
-    decreaseVolumeButton = new Button(sf::Vector2f(window->getSize().x/ 2 + 50, window->getSize().y / 4 * 3 - 50),
+    decreaseVolumeButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
+                                                        window->getSize().y / 10.f * 7 - 50),
                                       sf::Vector2f(50, 50),
                                       sf::Color::Blue,
                                       "Dec",
                                       &textFont);
+
+    ghostButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
+                                          window->getSize().y / 10.f * 9 - 50),
+                             sf::Vector2f(50, 50),
+                             sf::Color::Blue,
+                             *this->ghostFlagPtr ? "On" : "Off",
+                             &textFont);
 
 
 }
@@ -105,6 +131,7 @@ Menu::~Menu() {
     delete decreaseHeightButton;
     delete increaseVolumeButton;
     delete decreaseVolumeButton;
+    delete ghostButton;
 }
 
 void Menu::run() {
@@ -183,6 +210,11 @@ void Menu::run() {
             }
         }
 
+        if (ghostButton->updateButton(mouseViewPos)) {
+            *ghostFlagPtr = !*ghostFlagPtr;
+            ghostButton->setText(*ghostFlagPtr ? "On" : "Off");
+        }
+
         window->clear();
         window->draw(background);
         window->draw(*startButton);
@@ -201,6 +233,8 @@ void Menu::run() {
         window->draw(*decreaseVolumeButton);
         window->draw(volumeText);
 
+        window->draw(*ghostButton);
+        window->draw(ghostText);
 
         window->display();
     }

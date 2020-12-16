@@ -16,6 +16,7 @@ private:
     sf::Text widthText;
     sf::Text heightText;
     sf::Text volumeText;
+    sf::Text ghostText;
 
     Button* startButton;
     Button* exitButton;
@@ -30,14 +31,17 @@ private:
     Button* increaseVolumeButton;
     Button* decreaseVolumeButton;
 
+    Button* ghostButton;
+
     int* widthPtr;
     int* heightPtr;
     int* volumePtr;
     int* gameStatePtr;
+    bool* ghostFlagPtr;
 
 
 public:
-    Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr);
+    Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr);
     virtual ~Menu();
 
     void run();

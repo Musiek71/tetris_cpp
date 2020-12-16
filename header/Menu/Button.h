@@ -21,6 +21,8 @@ protected:
 public:
     Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, std::string text, sf::Font* font);
 
+    void setText(std::string text);
+
     bool updateButton(sf::Vector2f mousePos);
     bool mouseOnButton(sf::Vector2f mousePos);
 };

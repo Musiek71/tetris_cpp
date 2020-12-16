@@ -51,3 +51,7 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, 
                            buttonShape.getPosition().y);
 }
 
+void Button::setText(std::string text) {
+    this->buttonText.setString(text);
+}
+

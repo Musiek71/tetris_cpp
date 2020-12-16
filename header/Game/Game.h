@@ -28,6 +28,7 @@ private:
     int level = 1;
     int totalRows = 0;
     float volume = 100;
+    bool ghostFlag = true;
 
     int* gameStatePtr;
     int* scorePtr;
@@ -47,7 +48,7 @@ private:
     void updateLevel();
 
 public:
-    Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr);
+    Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr, bool ghostFlag);
 
     virtual ~Game();
 

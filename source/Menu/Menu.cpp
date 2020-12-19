@@ -5,7 +5,8 @@
 #include <iostream>
 #include "../../header/Menu/Menu.h"
 
-Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr) {
+Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr,
+           ResourceManager* resourceManager) {
     this-> window = window;
     this->widthPtr = widthPtr;
     this->heightPtr = heightPtr;
@@ -13,18 +14,19 @@ Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumeP
     this->gameStatePtr = gameStatePtr;
     this->ghostFlagPtr = ghostFlagPtr;
 
+    this->resourceManager = resourceManager;
+
     window->setSize(sf::Vector2u(800, 800));
 
     sf::View gameView(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y));
     window->setView(gameView);
 
-    if (!textFont.loadFromFile("gbfont.ttf")) {
-        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
-    }
-    widthText.setFont(textFont);
-    heightText.setFont(textFont);
-    volumeText.setFont(textFont);
-    ghostText.setFont(textFont);
+    textFont = this->resourceManager->getFont("gbfont.ttf");
+
+    widthText.setFont(*textFont);
+    heightText.setFont(*textFont);
+    volumeText.setFont(*textFont);
+    ghostText.setFont(*textFont);
 
     widthText.setString("Width:" + std::to_string(*widthPtr));
     widthText.setCharacterSize(24);
@@ -49,73 +51,63 @@ Menu::Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumeP
     startButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
                                             window->getSize().y / 4.f * 1),
                              sf::Vector2f(200, 100),
-                             sf::Color::Blue,
                              "Start",
-                             &textFont);
+                             this->resourceManager);
 
     leaderboardButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
                                                 window->getSize().y / 4.f * 2),
                                    sf::Vector2f(200, 100),
-                                   sf::Color::Blue,
                                    "Scores",
-                                   &textFont);
+                                   this->resourceManager);
 
 
     exitButton = new Button(sf::Vector2f(window->getSize().x / 4.f - widthText.getGlobalBounds().width / 2,
                                             window->getSize().y / 4.f * 3),
                             sf::Vector2f(200, 100),
-                            sf::Color::Blue,
                             "Exit",
-                            &textFont);
+                            this->resourceManager);
 
     increaseWidthButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
                                                         window->getSize().y / 10.f * 3  - 50),
                                      sf::Vector2f(50, 50),
-                                     sf::Color::Blue,
                                      "Inc",
-                                     &textFont);
+                                     this->resourceManager);
 
     decreaseWidthButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
                                                         window->getSize().y / 10.f * 3 - 50),
                                      sf::Vector2f(50, 50),
-                                     sf::Color::Blue,
                                      "Dec",
-                                     &textFont);
+                                     this->resourceManager);
 
     increaseHeightButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
                                                         window->getSize().y / 10.f * 5  - 50),
                                       sf::Vector2f(50, 50),
-                                      sf::Color::Blue,
                                       "Inc",
-                                      &textFont);
+                                      this->resourceManager);
 
     decreaseHeightButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
                                                         window->getSize().y / 10.f * 5 - 50),
                                       sf::Vector2f(50, 50),
-                                      sf::Color::Blue,
                                       "Dec",
-                                      &textFont);
+                                      this->resourceManager);
 
     increaseVolumeButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
                                                         window->getSize().y / 10.f * 7  - 50),
                                       sf::Vector2f(50, 50),
-                                      sf::Color::Blue,
                                       "Inc",
-                                      &textFont);
+                                      this->resourceManager);
 
     decreaseVolumeButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2 + 100,
                                                         window->getSize().y / 10.f * 7 - 50),
                                       sf::Vector2f(50, 50),
-                                      sf::Color::Blue,
                                       "Dec",
-                                      &textFont);
+                                      this->resourceManager);
 
     ghostButton = new Button(sf::Vector2f(window->getSize().x / 4.f * 3 - widthText.getGlobalBounds().width / 2,
                                           window->getSize().y / 10.f * 9 - 50),
                              sf::Vector2f(50, 50),
-                             sf::Color::Blue,
                              *this->ghostFlagPtr ? "On" : "Off",
-                             &textFont);
+                             this->resourceManager);
 
 
 }
@@ -136,11 +128,10 @@ Menu::~Menu() {
 
 void Menu::run() {
 
-    sf::Texture backgroundText;
-    backgroundText.loadFromFile("background.png");
     sf::Sprite background;
-    background.setTexture(backgroundText);
-    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
+    sf::Texture* backgroundText = resourceManager->getTexture("background.png");
+    background.setTexture(*backgroundText);
+    background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
 
 
     while (window->isOpen()) {

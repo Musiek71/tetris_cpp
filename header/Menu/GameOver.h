@@ -15,11 +15,13 @@
 class GameOver {
 private:
     sf::RenderWindow* window;
-    sf::Font textFont;
+    sf::Font* textFontPtr;
     sf::Text topText;
     sf::Text scoreText;
     sf::Text levelText;
     sf::Text nickText;
+
+    ResourceManager* resourceManager;
 
     Button* menuButton;
     Button* gameButton;
@@ -33,7 +35,7 @@ private:
     std::string nick;
 
 public:
-    GameOver(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr, int* levelPtr);
+    GameOver(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr, int* levelPtr, ResourceManager* resourceManager);
 
     virtual ~GameOver();
 

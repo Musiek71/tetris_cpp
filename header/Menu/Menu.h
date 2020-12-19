@@ -12,11 +12,13 @@
 class Menu {
 private:
     sf::RenderWindow* window;
-    sf::Font textFont;
+    sf::Font* textFont;
     sf::Text widthText;
     sf::Text heightText;
     sf::Text volumeText;
     sf::Text ghostText;
+
+    ResourceManager* resourceManager;
 
     Button* startButton;
     Button* exitButton;
@@ -41,7 +43,8 @@ private:
 
 
 public:
-    Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr);
+    Menu(sf::RenderWindow *window, int *widthPtr, int *heightPtr, int *volumePtr, int* gameStatePtr, bool* ghostFlagPtr,
+         ResourceManager* resourceManager);
     virtual ~Menu();
 
     void run();

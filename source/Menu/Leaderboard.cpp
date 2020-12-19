@@ -9,12 +9,13 @@
 
 using namespace std;
 
-Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameStatePtr, int* scorePtr) {
+Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameStatePtr, int* scorePtr, ResourceManager* resourceManager) {
     //assign fields
     this->window = window;
     this->gameStatePtr = gameStatePtr;
     this->scorePtr = scorePtr;
     this->filename = filename;
+    this->resourceManager = resourceManager;
 
     //initializing window
     window->setSize(sf::Vector2u(800, 800));
@@ -23,21 +24,18 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
     window->setView(gameView);
 
     //open the main font
-    if (!textFont.loadFromFile("gbfont.ttf")) {
-        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
-    }
+    textFontPtr = this->resourceManager->getFont("gbfont.ttf");
 
     //init for top text
-    leaderboardText.setFont(textFont);
+    leaderboardText.setFont(*textFontPtr);
     leaderboardText.setCharacterSize(32);
     leaderboardText.setString("Leaderboard:");
     leaderboardText.setPosition(window->getSize().x / 2 - leaderboardText.getGlobalBounds().width / 2, 0);
 
     menuButton = new Button(sf::Vector2f(window->getSize().x/ 2 - 100, window->getSize().y - 100),
                              sf::Vector2f(200, 100),
-                             sf::Color::Blue,
                              "Menu",
-                             &textFont);
+                             this->resourceManager);
 
     //open scores file
     ifstream inputStream;
@@ -52,7 +50,7 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
             string nick;
             long score;
             ss >> nick >> score;
-            scores.push_back(new Score(nick, score, &textFont));
+            scores.push_back(new Score(nick, score, textFontPtr));
         }
     } else {
         cout << "Unable to open file:" << filename << endl;
@@ -92,13 +90,10 @@ void Leaderboard::sortScores() {
 
 void Leaderboard::run() {
 
-    sf::Texture backgroundText;
-    backgroundText.loadFromFile("background.png");
     sf::Sprite background;
-    background.setTexture(backgroundText);
-    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
-
-
+    sf::Texture* backgroundText = resourceManager->getTexture("background.png");
+    background.setTexture(*backgroundText);
+    background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
 
     while (window->isOpen()) {
 

@@ -26,7 +26,9 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tetris");
     window.setVerticalSyncEnabled(true);
 
-    Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag);
+    ResourceManager resourceManager;
+
+    Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag, &resourceManager);
 
     while (window.isOpen()) {
         if (gameState == EXIT)
@@ -45,13 +47,13 @@ int main() {
             }
 
             case GAMEOVER: {
-                GameOver gameOver(&window, "scores.txt", &gameState, &score, &level);
+                GameOver gameOver(&window, "scores.txt", &gameState, &score, &level, &resourceManager);
                 gameOver.run();
                 break;
             }
 
             case LEADERBOARD: {
-                Leaderboard leaderboard(&window, "scores.txt", &gameState, &score);
+                Leaderboard leaderboard(&window, "scores.txt", &gameState, &score, &resourceManager);
                 leaderboard.run();
                 break;
             }

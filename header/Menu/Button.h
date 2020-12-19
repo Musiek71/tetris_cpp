@@ -7,21 +7,21 @@
 
 
 #include <SFML/Graphics.hpp>
+#include "../ResourceManager.h"
 
 class Button : public sf::Drawable {
 private:
-    sf::Texture releasedTexture;
-    sf::Texture pressedTexture;
-    sf::Color buttonColor;
+    sf::Texture* releasedTexturePtr;
+    sf::Texture* pressedTexturePtr;
+    sf::Font* buttonFontPtr;
     sf::RectangleShape buttonShape;
-    sf::Font* buttonFont;
     sf::Text buttonText;
     bool isPressed = false;
     bool isReleased = true;
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 public:
-    Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, std::string text, sf::Font* font);
+    Button(sf::Vector2f position, sf::Vector2f size, std::string text, ResourceManager* resourceManager);
 
     void setText(std::string text);
 

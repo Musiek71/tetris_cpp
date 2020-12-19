@@ -15,8 +15,10 @@
 class Leaderboard {
 private:
     sf::RenderWindow* window;
-    sf::Font textFont;
+    sf::Font* textFontPtr;
     sf::Text leaderboardText;
+
+    ResourceManager* resourceManager;
 
     Button* menuButton;
 
@@ -27,7 +29,7 @@ private:
     int* scorePtr;
 
 public:
-    Leaderboard(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr);
+    Leaderboard(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr, ResourceManager* resourceManager);
 
     virtual ~Leaderboard();
 

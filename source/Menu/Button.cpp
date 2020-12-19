@@ -20,34 +20,33 @@ bool Button::updateButton(sf::Vector2f mousePos) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             isPressed = true;
             isReleased = false;
-            buttonShape.setTexture(&pressedTexture);
+            buttonShape.setTexture(pressedTexturePtr);
         } else if (isPressed) {
             isPressed = false;
             isReleased = true;
-            buttonShape.setTexture(&releasedTexture);
+            buttonShape.setTexture(releasedTexturePtr);
             return true;
         }
     } else if (isPressed) {
         isPressed = false;
         isReleased = true;
-        buttonShape.setTexture(&releasedTexture);
+        buttonShape.setTexture(releasedTexturePtr);
     }
     return false;
 }
 
-Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color buttonColor, std::string text, sf::Font* font) {
-    this->buttonColor = buttonColor;
+Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text, ResourceManager* resourceManager) {
 
-    pressedTexture.loadFromFile("button_pressed.png");
-    releasedTexture.loadFromFile("button_released.png");
+    releasedTexturePtr = resourceManager->getTexture("button_released.png");
+    pressedTexturePtr = resourceManager->getTexture("button_pressed.png");
 
     buttonShape.setPosition(position);
     buttonShape.setSize(size);
-    buttonShape.setTexture(&releasedTexture);
+    buttonShape.setTexture(releasedTexturePtr);
 
-    buttonFont = font;
+    buttonFontPtr = resourceManager->getFont("gbfont.ttf");
 
-    buttonText.setFont(*buttonFont);
+    buttonText.setFont(*buttonFontPtr);
     buttonText.setCharacterSize(buttonShape.getGlobalBounds().height / 4);
     buttonText.setString(text);
     buttonText.setPosition(buttonShape.getPosition().x + buttonShape.getGlobalBounds().width / 2 - buttonText.getGlobalBounds().width / 2,

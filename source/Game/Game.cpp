@@ -94,7 +94,7 @@ bool Game::run() {
 
     sf::SoundBuffer clearedSoundBuffer;
     sf::Sound clearedSound;
-    if (!clearedSoundBuffer.loadFromFile("powerup.wav"))
+    if (!clearedSoundBuffer.loadFromFile("clear.wav"))
         return -1;
     clearedSound.setBuffer(clearedSoundBuffer);
     clearedSound.setVolume(this->volume);

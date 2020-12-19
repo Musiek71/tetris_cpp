@@ -4,12 +4,13 @@
 
 #include "../../header/Menu/GameOver.h"
 
-GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStatePtr, int *scorePtr, int* levelPtr) {
+GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStatePtr, int *scorePtr, int* levelPtr, ResourceManager* resourceManager) {
     this->window = window;
     this->gameStatePtr = gameStatePtr;
     this->scorePtr = scorePtr;
     this->lvlPtr = levelPtr;
     this->filename = filename;
+    this->resourceManager = resourceManager;
 
     //initializing window
     window->setSize(sf::Vector2u(800, 800));
@@ -18,48 +19,43 @@ GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStat
     window->setView(gameView);
 
     //open the main font
-    if (!textFont.loadFromFile("gbfont.ttf")) {
-        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
-    }
+    textFontPtr = resourceManager->getFont("gbfont.ttf");
 
     //init for top text
-    topText.setFont(textFont);
+    topText.setFont(*textFontPtr);
     topText.setCharacterSize(32);
     topText.setString("Game over! Enter your name:");
     topText.setPosition(window->getSize().x / 2 - topText.getGlobalBounds().width / 2, 0);
 
-    scoreText.setFont(textFont);
+    scoreText.setFont(*textFontPtr);
     scoreText.setCharacterSize(32);
     scoreText.setString("Score:" + std::to_string(*scorePtr));
     scoreText.setPosition(window->getSize().x / 2 - scoreText.getGlobalBounds().width / 2, window->getSize().y / 8);
 
-    levelText.setFont(textFont);
+    levelText.setFont(*textFontPtr);
     levelText.setCharacterSize(32);
     levelText.setString("Level:" + std::to_string(*levelPtr));
     levelText.setPosition(window->getSize().x / 2 - levelText.getGlobalBounds().width / 2, window->getSize().y * 2 / 8);
 
-    nickText.setFont(textFont);
+    nickText.setFont(*textFontPtr);
     nickText.setCharacterSize(48);
     nickText.setString("Nick:" + nick);
     nickText.setPosition(window->getSize().x / 2 - nickText.getGlobalBounds().width / 2, window->getSize().y / 8 * 3);
 
     menuButton = new Button(sf::Vector2f(window->getSize().x / 2 - 100, window->getSize().y - 100),
                             sf::Vector2f(200, 100),
-                            sf::Color::Blue,
                             "Menu",
-                            &textFont);
+                            resourceManager);
 
     gameButton = new Button(sf::Vector2f(0, window->getSize().y - 100),
                             sf::Vector2f(200, 100),
-                            sf::Color::Blue,
                             "Restart!",
-                            &textFont);
+                            resourceManager);
 
     leaderboardButton = new Button(sf::Vector2f(window->getSize().x - 200, window->getSize().y - 100),
                             sf::Vector2f(200, 100),
-                            sf::Color::Blue,
                             "Scores",
-                            &textFont);
+                            resourceManager);
 
 }
 
@@ -71,11 +67,10 @@ GameOver::~GameOver() {
 
 void GameOver::run() {
 
-    sf::Texture backgroundText;
-    backgroundText.loadFromFile("background.png");
     sf::Sprite background;
-    background.setTexture(backgroundText);
-    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
+    sf::Texture* backgroundText = resourceManager->getTexture("background.png");
+    background.setTexture(*backgroundText);
+    background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
 
     while (window->isOpen()) {
 

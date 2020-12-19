@@ -36,7 +36,7 @@ int main() {
             case MENU: {
                 menu.run();
                 break;
-            }
+               }
 
             case GAME: {
                 Game game(&window, boardWidth, boardHeight, (float)volume, &gameState, &score, &level, ghostFlag);

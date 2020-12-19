@@ -10,9 +10,9 @@
 #include "Piece.h"
 
 class SPiece : public Piece {
-    static Point punkty[4][4];
+    static Point points[4][4];
 public:
-    SPiece(std::string tileset, int rotation, int spawnX);
+    SPiece(std::string tileset, ResourceManager* resourceManager, int rotation, int spawnX);
 };
 
 

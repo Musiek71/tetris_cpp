@@ -12,13 +12,13 @@
 class NextBoard : public sf::Drawable, sf::Transformable{
 private:
     sf::Sprite background;
-    sf::Texture texture;
+    sf::Texture* texture;
     Piece* piece;
     Point position;
     int tileSize;
 
 public:
-    NextBoard(std::string textfilename, Piece* piece, int x, int y, int tileSize);
+    NextBoard(std::string textfilename, ResourceManager* resourceManager, Piece* piece, int x, int y, int tileSize);
 
     void setPiece(Piece* piece);
 

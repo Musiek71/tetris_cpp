@@ -5,14 +5,17 @@
 #include "../../header/Game/Piece.h"
 #include "../../header/Game/Board.h"
 
-Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes, int spawnX) : rotation(rotation), currentShapeInt(currentShapeInt) {
+Piece::Piece(std::string tileset, ResourceManager* resourceManager, int rotation, int currentShapeInt, Point* shapes, int spawnX) : rotation(rotation), currentShapeInt(currentShapeInt) {
     setShapes(shapes);
     this->piecePosition.setPos(spawnX, DEFAULT_Y);
+    this->resourceManager = resourceManager;
 
-    int loaded = tileSet.loadFromFile(tileset, sf::IntRect(32 * currentShapeInt, 0, 32, 32));
+    tilesetPtr = resourceManager->getTexture(tileset);
+
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
-        tileSprite[i].setTexture(tileSet);
+        tileSprite[i].setTextureRect(sf::IntRect(32 * currentShapeInt, 0, 32, 32));
+        tileSprite[i].setTexture(*tilesetPtr);
         tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
                                   (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
         );
@@ -20,11 +23,11 @@ Piece::Piece(std::string tileset, int rotation, int currentShapeInt, Point* shap
 
 }
 
-void Piece::setShapes(Point* shapes) {
+void Piece::setShapes(Point* newShapes) {
     //copying shapes
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            this->shapes[i][j] = shapes[i * 4 + j];
+            this->shapes[i][j] = newShapes[i * 4 + j];
         }
     }
     setCurrentShape();

@@ -5,7 +5,7 @@
 #include "../../header/Game/ZPiece.h"
 #include "../../header/PieceEnum.h"
 
-Point ZPiece::punkty[4][4] = {
+Point ZPiece::points[4][4] = {
         {
                 Point(0, 0), Point(1, 0),  Point(1, 1),  Point(2,1)
         },
@@ -20,4 +20,4 @@ Point ZPiece::punkty[4][4] = {
         }
 };
 
-ZPiece::ZPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, ZP, (Point*)punkty, spawnX) {}
+ZPiece::ZPiece(std::string tileset, ResourceManager* resourceManager, int rotation, int spawnX) : Piece(tileset, resourceManager, rotation, ZP, (Point*)points, spawnX) {}

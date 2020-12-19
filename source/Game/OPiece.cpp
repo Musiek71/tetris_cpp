@@ -5,7 +5,7 @@
 #include "../../header/Game/OPiece.h"
 #include "../../header/PieceEnum.h"
 
-Point OPiece::punkty[4][4] = {
+Point OPiece::points[4][4] = {
         {
                 Point(1, 1), Point(2, 1),  Point(1, 2),  Point(2,2)
         },
@@ -20,4 +20,4 @@ Point OPiece::punkty[4][4] = {
         }
 };
 
-OPiece::OPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, OP, (Point*)punkty, spawnX) {}
+OPiece::OPiece(std::string tileset, ResourceManager* resourceManager, int rotation, int spawnX) : Piece(tileset, resourceManager, rotation, OP, (Point*)points, spawnX) {}

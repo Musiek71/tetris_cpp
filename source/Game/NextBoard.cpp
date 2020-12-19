@@ -4,11 +4,10 @@
 
 #include "../../header/Game/NextBoard.h"
 
-NextBoard::NextBoard(std::string textfilename, Piece *piece, int x, int y, int tileSize) {
-    if (!texture.loadFromFile(textfilename)) {
-        std::cout << "Scoreboard texture:"<< textfilename <<  " loading failed." << std::endl;
-    }
-    background.setTexture(texture);
+NextBoard::NextBoard(std::string textfilename, ResourceManager* resourceManager, Piece *piece, int x, int y, int tileSize) {
+    texture = resourceManager->getTexture(textfilename);
+
+    background.setTexture(*texture);
     background.setPosition(x, y);
 
     this->tileSize = tileSize;

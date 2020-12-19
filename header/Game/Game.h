@@ -12,7 +12,6 @@
 #include "PieceFactory.h"
 #include "ScoreBoard.h"
 #include "../../header/StatesEnum.h"
-#include <iostream>
 #include <SFML/Audio.hpp>
 #include "NextBoard.h"
 
@@ -27,15 +26,17 @@ private:
     int score = 0;
     int level = 1;
     int totalRows = 0;
-    float volume = 100;
+    float volume = 50;
     bool ghostFlag = true;
+
+    ResourceManager* resourceManager;
 
     int* gameStatePtr;
     int* scorePtr;
     int* levelPtr;
 
     sf::RenderWindow* window;
-    sf::Font textFont;
+    sf::Font* textFontPtr;
     sf::Text pausedText;
 
     bool moveLeft(Piece *piece, Piece* ghostPiece);
@@ -50,7 +51,8 @@ private:
     void updateLevel();
 
 public:
-    Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr, bool ghostFlag);
+    Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr,
+         int* levelPtr, bool ghostFlag, ResourceManager* resourceManager);
 
     virtual ~Game();
 

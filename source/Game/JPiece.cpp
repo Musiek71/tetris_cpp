@@ -5,7 +5,7 @@
 #include "../../header/Game/JPiece.h"
 #include "../../header/PieceEnum.h"
 
-Point JPiece::punkty[4][4] = {
+Point JPiece::points[4][4] = {
         {
                 Point(1, 0), Point(1, 1),  Point(1, 2),  Point(0,2)
         },
@@ -20,4 +20,4 @@ Point JPiece::punkty[4][4] = {
         }
 };
 
-JPiece::JPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, JP, (Point*)punkty, spawnX) {}
+JPiece::JPiece(std::string tileset, ResourceManager* resourceManager, int rotation, int spawnX) : Piece(tileset, resourceManager, rotation, JP, (Point*)points, spawnX) {}

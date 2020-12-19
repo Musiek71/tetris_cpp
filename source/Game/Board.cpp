@@ -5,9 +5,7 @@
 #include "../../header/Game/Board.h"
 
 bool Board::init(std::string tileset, int tileSize) {
-    //TODO throw exceptions if not loaded
-    if (!tileSet.loadFromFile(tileset))
-        return false;
+    tilesetPtr = resourceManager->getTexture(tileset);
 
     //set offset
     this->setPosition(X_OFFSET, -DEFAULT_Y_OFFSET + Y_OFFSET);
@@ -25,14 +23,15 @@ bool Board::init(std::string tileset, int tileSize) {
 void Board::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     states.transform *= getTransform();
 
-    states.texture = &tileSet;
+    states.texture = tilesetPtr;
 
     target.draw(vertices, states);
 }
 
-Board::Board(int boardWidth, int boardHeight) {
+Board::Board(int boardWidth, int boardHeight, ResourceManager* resourceManager) {
     this->boardWidth = boardWidth;
     this->boardHeight = boardHeight;
+    this->resourceManager = resourceManager;
 
     this->board = new int*[this->boardWidth];
     for (int i = 0; i < this->boardWidth; i++)

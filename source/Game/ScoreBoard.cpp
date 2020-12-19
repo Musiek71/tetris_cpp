@@ -5,12 +5,12 @@
 #include "../../header/Game/ScoreBoard.h"
 
 
-ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, int level, int score, int x, int y, int tileSize) {
+ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, ResourceManager* resourceManager,
+                       int level, int score, int x, int y, int tileSize) {
     //scoreboard initialization
-    if (!texture.loadFromFile(textfilename)) {
-        std::cout << "Scoreboard texture:"<< textfilename <<  " loading failed." << std::endl;
-    }
-    background.setTexture(texture);
+    backgroundTextPtr = resourceManager->getTexture(textfilename);
+
+    background.setTexture(*backgroundTextPtr);
     background.setPosition(x, y);
 
     this->position.setPos(x, y);
@@ -18,12 +18,10 @@ ScoreBoard::ScoreBoard(std::string textfilename, std::string fontname, int level
     this->level = level;
     this->score = score;
 
-    if (!font.loadFromFile(fontname)) {
-        std::cout << "Scoreboard font:"<< fontname <<  " loading failed." << std::endl;
-    }
+    font = resourceManager->getFont(fontname);
 
-    levelText.setFont(font);
-    scoreText.setFont(font);
+    levelText.setFont(*font);
+    scoreText.setFont(*font);
     levelText.setPosition(x + tileSize, y + 3 * tileSize);
     scoreText.setPosition(x + tileSize, y + 1 * tileSize);
     levelText.setCharacterSize(24);

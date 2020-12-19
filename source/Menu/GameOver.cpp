@@ -49,7 +49,7 @@ GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStat
 
     gameButton = new Button(sf::Vector2f(0, window->getSize().y - 100),
                             sf::Vector2f(200, 100),
-                            "Restart!",
+                            "Restart",
                             resourceManager);
 
     leaderboardButton = new Button(sf::Vector2f(window->getSize().x - 200, window->getSize().y - 100),

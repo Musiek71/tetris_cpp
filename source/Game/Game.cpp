@@ -4,7 +4,8 @@
 
 #include "../../header/Game/Game.h"
 
-Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr, bool ghostFlag) {
+Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr,
+           int* levelPtr, bool ghostFlag, ResourceManager* resourceManager) {
     if (boardWidth >= 5)
         this->boardWidth = boardWidth + 2; //side walls
     else
@@ -14,8 +15,10 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
     else
         this->boardHeight = 10 + 4;
 
-    this->gameBoard = new Board(this->boardWidth, this->boardHeight);
-    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2);
+    this->resourceManager = resourceManager;
+
+    this->gameBoard = new Board(this->boardWidth, this->boardHeight, resourceManager);
+    this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2, this->resourceManager);
 
     this->window = window;
     this->volume = volume;
@@ -24,10 +27,9 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
     this->levelPtr = levelPtr;
     this->ghostFlag = ghostFlag;
 
-    if (!textFont.loadFromFile("gbfont.ttf")) {
-        std::cout << "Failed to load font:" << "gbfont.ttf" << std::endl;
-    }
-    this->pausedText.setFont(textFont);
+    textFontPtr = resourceManager->getFont("gbfont.ttf");
+
+    this->pausedText.setFont(*textFontPtr);
     this->pausedText.setCharacterSize(48);
     this->pausedText.setString("Paused");
     this->pausedText.setPosition(window->getSize().x / 2 - pausedText.getGlobalBounds().width / 2,
@@ -36,21 +38,17 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
 
 bool Game::run() {
 
-    if (!gameBoard->init("tileset.png", 32)) {
-        std::cout << "Tileset loading failed." << std::endl;
-        return false;
-    }
+    gameBoard->init("tileset.png", 32);
 
     window->setSize(sf::Vector2u((boardWidth + 13) * 32, boardHeight * 32));
 
     sf::View gameView(sf::FloatRect(0, 0, (boardWidth + 13) * 32, boardHeight * 32));
     window->setView(gameView);
 
-    sf::Texture backgroundText;
-    backgroundText.loadFromFile("background.png");
     sf::Sprite background;
-    background.setTexture(backgroundText);
-    background.setScale((float)window->getSize().x / backgroundText.getSize().x, (float)window->getSize().y / backgroundText.getSize().y );
+    sf::Texture* backgroundText = resourceManager->getTexture("background.png");
+    background.setTexture(*backgroundText);
+    background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
 
 
     Piece* currentPiece = pieceFactory->getPiece();
@@ -60,6 +58,7 @@ bool Game::run() {
 
     ScoreBoard scoreBoard("score_field.png",
                           "gbfont.ttf",
+                          resourceManager,
                           1,
                           0,
                           X_OFFSET + (this->boardWidth + 2) * 32,
@@ -69,10 +68,26 @@ bool Game::run() {
     scoreBoard.setScore(this->score);
 
     NextBoard nextBoard("next_field.png",
+                        resourceManager,
                         nextPiece,
                         X_OFFSET + (this->boardWidth + 2) * 32,
                         1* 32,
                         32);
+
+    sf::SoundBuffer* fallSoundBuffer = resourceManager->getSoundBuffer("fall.wav");
+    sf::Sound fallSound;
+    fallSound.setBuffer(*fallSoundBuffer);
+    fallSound.setVolume(this->volume);
+
+    sf::SoundBuffer* clearedSoundBuffer = resourceManager->getSoundBuffer("clear.wav");
+    sf::Sound clearedSound;
+    clearedSound.setBuffer(*clearedSoundBuffer);
+    clearedSound.setVolume(this->volume);
+
+    sf::Music* music = resourceManager->getMusic("tetris.ogg");
+    music->setVolume(this->volume);
+    music->setLoop(true);
+    music->play();
 
 
     float deltaTime = 0;
@@ -85,41 +100,20 @@ bool Game::run() {
     sf::Time frameTime = frameClock.getElapsedTime();
     sf::Time keyTime = keyClock.getElapsedTime();
 
-    sf::SoundBuffer fallSoundBuffer;
-    sf::Sound fallSound;
-    if (!fallSoundBuffer.loadFromFile("fall.wav"))
-        return -1;
-    fallSound.setBuffer(fallSoundBuffer);
-    fallSound.setVolume(this->volume);
-
-    sf::SoundBuffer clearedSoundBuffer;
-    sf::Sound clearedSound;
-    if (!clearedSoundBuffer.loadFromFile("clear.wav"))
-        return -1;
-    clearedSound.setBuffer(clearedSoundBuffer);
-    clearedSound.setVolume(this->volume);
-
-    sf::Music music;
-    if (!music.openFromFile("tetris.ogg"))
-        return -1;
-    music.setVolume(this->volume);
-    music.setLoop(true);
-    music.play();
-
-
-
     while (window->isOpen()) {
 
-        if (*gameStatePtr == MENU)
+        if (*gameStatePtr == MENU) {
+            music->stop();
             break;
+        }
 
         if (gameOver) {
-            std::cout << "Game over!\n";
-            std::cout << "Score:" << this->score << "\nLevel:" << this->level << std::endl;
 
             *gameStatePtr = GAMEOVER;
             *levelPtr = level;
             *scorePtr = score;
+
+            music->stop();
 
             delete currentPiece;
             delete nextPiece;

@@ -4,8 +4,9 @@
 
 #include "../../header/Game/PieceFactory.h"
 
-PieceFactory::PieceFactory(int defaultX) {
+PieceFactory::PieceFactory(int defaultX, ResourceManager* resourceManager) {
     this->defaultX = defaultX;
+    this->resourceManager = resourceManager;
     fillVector();
 }
 
@@ -23,32 +24,32 @@ void PieceFactory::fillVector() {
 }
 
 Piece* PieceFactory::getPiece() {
-    if (pieceVector.size() == 0)
+    if (pieceVector.empty())
         fillVector();
     int random = pieceVector[0];
     pieceVector.erase(pieceVector.begin(), pieceVector.begin()+1);
     Piece* ptr;
     switch(random) {
         case 2:
-            ptr = new IPiece("tileset.png", 0, defaultX);
+            ptr = new IPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 3:
-            ptr = new JPiece("tileset.png", 0, defaultX);
+            ptr = new JPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 4:
-            ptr = new LPiece("tileset.png", 0, defaultX);
+            ptr = new LPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 5:
-            ptr = new OPiece("tileset.png", 0, defaultX);
+            ptr = new OPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 6:
-            ptr = new SPiece("tileset.png", 0, defaultX);
+            ptr = new SPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 7:
-            ptr = new TPiece("tileset.png", 0, defaultX);
+            ptr = new TPiece("tileset.png", resourceManager, 0, defaultX);
             break;
         case 8:
-            ptr = new ZPiece("tileset.png", 0, defaultX);
+            ptr = new ZPiece("tileset.png", resourceManager, 0, defaultX);
             break;
     }
 
@@ -56,5 +57,5 @@ Piece* PieceFactory::getPiece() {
 }
 
 Piece *PieceFactory::getGhostPiece(Piece *currentPiece) {
-    return new GhostPiece("tileset.png", currentPiece->getRotation(), currentPiece->getShapes());
+    return new GhostPiece("tileset.png", resourceManager, currentPiece->getRotation(), currentPiece->getShapes());
 }

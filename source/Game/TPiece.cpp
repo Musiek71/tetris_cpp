@@ -5,7 +5,7 @@
 #include "../../header/Game/TPiece.h"
 #include "../../header/PieceEnum.h"
 
-Point TPiece::punkty[4][4] = {
+Point TPiece::points[4][4] = {
         {
                 Point(0, 1), Point(1, 1),  Point(2, 1),  Point(1,2)
         },
@@ -20,4 +20,4 @@ Point TPiece::punkty[4][4] = {
         }
 };
 
-TPiece::TPiece(std::string tileset, int rotation, int spawnX) : Piece(tileset, rotation, TP, (Point*)punkty, spawnX) {}
+TPiece::TPiece(std::string tileset, ResourceManager* resourceManager, int rotation, int spawnX) : Piece(tileset, resourceManager, rotation, TP, (Point*)points, spawnX) {}

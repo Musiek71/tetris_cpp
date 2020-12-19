@@ -9,13 +9,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Point.h"
+#include "../ResourceManager.h"
 
 class ScoreBoard : public sf::Drawable, sf::Transformable {
 private:
     Point position;
-    sf::Font font;
+    sf::Font* font;
+    sf::Texture* backgroundTextPtr;
     sf::Sprite background;
-    sf::Texture texture;
     sf::Text scoreText;
     sf::Text levelText;
 
@@ -23,7 +24,8 @@ private:
     int score = 0;
 
 public:
-    ScoreBoard(std::string textfilename, std::string fontname, int level, int score, int x, int y, int tileSize);
+    ScoreBoard(std::string textfilename, std::string fontname, ResourceManager* resourceManager,
+               int level, int score, int x, int y, int tileSize);
 
     void setLevel(int level);
     void setScore(int score);

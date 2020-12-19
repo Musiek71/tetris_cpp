@@ -7,13 +7,13 @@
 
 int main() {
 
-    //TODO errors while loading things
     //TODO MAIN MENU LOOK
     //TODO unite all the pointers as a structure to clean up
     //TODO game over sound
     //TODO button textures
-    //TODO resource manager to save memory
     //TODO logo on the main screen
+    //TODO gameover music
+    //TODO throw out crucial functions from class constructors so you don't have to create new objects every time you leave menu
 
     int volume = 0;
     int score = 0;
@@ -30,6 +30,7 @@ int main() {
 
     Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag, &resourceManager);
 
+
     while (window.isOpen()) {
         if (gameState == EXIT)
             break;
@@ -41,7 +42,7 @@ int main() {
                }
 
             case GAME: {
-                Game game(&window, boardWidth, boardHeight, (float)volume, &gameState, &score, &level, ghostFlag);
+                Game game(&window, boardWidth, boardHeight, (float)volume, &gameState, &score, &level, ghostFlag, &resourceManager);
                 game.run();
                 break;
             }

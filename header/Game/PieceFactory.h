@@ -24,9 +24,11 @@ class PieceFactory {
     std::vector<int> pieceVector;
     int defaultX;
 
+    ResourceManager* resourceManager;
+
     void fillVector();
 public:
-    PieceFactory(int defaultX);
+    PieceFactory(int defaultX, ResourceManager* resourceManager);
 
     Piece* getPiece();
     Piece* getGhostPiece(Piece* currentPiece);

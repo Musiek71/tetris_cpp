@@ -8,6 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Point.h"
+#include "../ResourceManager.h"
 
 #define DEFAULT_Y 0
 
@@ -25,7 +26,9 @@ private:
     Point shape[4];
     Point shapes[4][4];
 
-    sf::Texture tileSet;
+    ResourceManager* resourceManager;
+
+    sf::Texture* tilesetPtr;
     sf::Sprite tileSprite[4];
 
     void setCurrentShape();
@@ -34,7 +37,7 @@ private:
 
 public:
 
-    Piece(std::string tileset, int rotation, int currentShapeInt, Point* shapes, int spawnX = 4);
+    Piece(std::string tileset, ResourceManager* resourceManager, int rotation, int currentShapeInt, Point* shapes, int spawnX = 4);
 
     void setShapes(Point* shapes);
 

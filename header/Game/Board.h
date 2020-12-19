@@ -12,8 +12,6 @@
 #include "Piece.h"
 
 
-//#define BOARD_WIDTH 12 //do modyfikacji w grze
-//#define BOARD_HEIGHT 24
 #define DEFAULT_Y_OFFSET 3 * 32 //default offset hides 3 invisible rows used for piece spawning
 #define Y_OFFSET 3 * 32
 #define X_OFFSET 3 * 32
@@ -24,14 +22,16 @@ private:
     int boardHeight;
     int** board;
 
-    sf::Texture tileSet;
+    ResourceManager* resourceManager;
+
+    sf::Texture* tilesetPtr;
     sf::VertexArray vertices;
 
     void updateTexture(Point piecePos, Point shapePoint, int currentShapeInt, int tileSize);
     void updateAllTextures(int tileSize);
 
 public:
-    Board(int boardWidth, int boardHeight);
+    Board(int boardWidth, int boardHeight, ResourceManager* resourceManager);
 
     virtual ~Board();
 

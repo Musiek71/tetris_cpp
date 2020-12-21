@@ -4,8 +4,9 @@
 
 #include "../../header/Menu/GameOver.h"
 
-GameOver::GameOver(sf::RenderWindow *window, std::string filename, int *gameStatePtr, int *scorePtr, int* levelPtr, ResourceManager* resourceManager) {
+GameOver::GameOver(sf::RenderWindow *window, std::string filename, float volume, int *gameStatePtr, int *scorePtr, int* levelPtr, ResourceManager* resourceManager) {
     this->window = window;
+    this->volume = volume;
     this->gameStatePtr = gameStatePtr;
     this->scorePtr = scorePtr;
     this->lvlPtr = levelPtr;
@@ -71,6 +72,13 @@ void GameOver::run() {
     sf::Texture* backgroundText = resourceManager->getTexture("background.png");
     background.setTexture(*backgroundText);
     background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
+
+    sf::SoundBuffer* gameOverSoundBuffer = resourceManager->getSoundBuffer("gameover.wav");
+    sf::Sound gameOverSound;
+    gameOverSound.setBuffer(*gameOverSoundBuffer);
+    gameOverSound.setVolume(this->volume);
+
+    gameOverSound.play();
 
     while (window->isOpen()) {
 

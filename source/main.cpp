@@ -7,12 +7,9 @@
 
 int main() {
 
-    //TODO MAIN MENU LOOK
     //TODO unite all the pointers as a structure to clean up
-    //TODO game over sound
     //TODO button textures
     //TODO logo on the main screen
-    //TODO gameover music
     //TODO throw out crucial functions from class constructors so you don't have to create new objects every time you leave menu
 
     int volume = 0;
@@ -48,7 +45,7 @@ int main() {
             }
 
             case GAMEOVER: {
-                GameOver gameOver(&window, "scores.txt", &gameState, &score, &level, &resourceManager);
+                GameOver gameOver(&window, "scores.txt", volume, &gameState, &score, &level, &resourceManager);
                 gameOver.run();
                 break;
             }

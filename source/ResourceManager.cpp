@@ -20,6 +20,7 @@ ResourceManager::ResourceManager() {
     //add sounds
     addSoundBuffer("fall.wav");
     addSoundBuffer("clear.wav");
+    addSoundBuffer("gameover.wav");
 
     //add music
     addMusic("tetris.ogg");

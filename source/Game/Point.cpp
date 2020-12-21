@@ -26,7 +26,7 @@ void Point::setY(int y) {
 }
 
 void Point::print() {
-    std::cout << Point::getX() << " " << Point::getY() << std::endl;
+    std::cout << Point::getX() << ":" << Point::getY() << std::endl;
 }
 
 void Point::setPos(int x, int y) {

@@ -9,15 +9,25 @@
  * Enum for piece distinguishing
  */
 enum PieceEnum {
+    /// Empty block.
     NONE = 0,
+    /// Wall block.
     WALL,
-    IP, //I piece
-    JP, //J piece
-    LP, //L piece
-    OP, //O piece
-    SP, //S piece
-    TP, //T piece
-    ZP, //Z piece
+    /// I piece.
+    IP,
+    /// J piece.
+    JP,
+    /// L piece.
+    LP,
+    /// O piece.
+    OP,
+    /// S piece.
+    SP,
+    /// T piece.
+    TP,
+    /// Z piece.
+    ZP,
+    /// Ghost block of the falling tetromino.
     GHOST
 };
 

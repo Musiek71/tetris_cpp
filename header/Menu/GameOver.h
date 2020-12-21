@@ -7,6 +7,7 @@
 
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio/Sound.hpp>
 #include "Button.h"
 #include <iostream>
 #include <fstream>
@@ -31,11 +32,13 @@ private:
     int* scorePtr;
     int* lvlPtr;
 
+    int volume;
+
     std::string filename;
     std::string nick;
 
 public:
-    GameOver(sf::RenderWindow* window, std::string filename, int* gameStatePtr, int* scorePtr, int* levelPtr, ResourceManager* resourceManager);
+    GameOver(sf::RenderWindow* window, std::string filename, float volume, int* gameStatePtr, int* scorePtr, int* levelPtr, ResourceManager* resourceManager);
 
     virtual ~GameOver();
 

@@ -6,16 +6,24 @@
 #include "../../header/Game/Board.h"
 
 Piece::Piece(std::string tileset, ResourceManager* resourceManager, int rotation, int currentShapeInt, Point* shapes, int spawnX) : rotation(rotation), currentShapeInt(currentShapeInt) {
-    setShapes(shapes);
-    this->piecePosition.setPos(spawnX, DEFAULT_Y);
-    this->resourceManager = resourceManager;
+    //Main piece initialization
 
+    //copy shapes to the shapes array.
+    setShapes(shapes);
+
+    //set starting position
+    this->piecePosition.setPos(spawnX, DEFAULT_Y);
+
+    //set the resource manager and get the texture with the tileset
+    this->resourceManager = resourceManager;
     tilesetPtr = resourceManager->getTexture(tileset);
 
     //init of four sprites representing piece
     for (int i = 0; i < 4; i++) {
+        //set the texture rectangle for each SFML sprite depending on the current shape enum.
         tileSprite[i].setTextureRect(sf::IntRect(32 * currentShapeInt, 0, 32, 32));
         tileSprite[i].setTexture(*tilesetPtr);
+        //set SFML sprite's position on the screen
         tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
                                   (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
         );
@@ -24,7 +32,7 @@ Piece::Piece(std::string tileset, ResourceManager* resourceManager, int rotation
 }
 
 void Piece::setShapes(Point* newShapes) {
-    //copying shapes
+    //copying shapes to the class field
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             this->shapes[i][j] = newShapes[i * 4 + j];
@@ -41,7 +49,7 @@ void Piece::setCurrentShape() {
 }
 
 void Piece::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-
+    //for each of 4 SFML sprites, draw the sprite at certain coordinates.
     for (int i = 0; i < 4; i++) {
         //condition for drawing the piece lower
         //3 * 32 is the default offset used for piece spawning
@@ -76,10 +84,6 @@ void Piece::setPiecePosition(int x, int y) {
 void Piece::setPiecePosition(Point x) {
     Piece::setPiecePosition(x.getX(), x.getY(), true);
     setCurrentShape();
-}
-
-void Piece::setPiecePosition() {
-    Piece::setPiecePosition(this->piecePosition.getX(), this->piecePosition.getY());
 }
 
 void Piece::rotateLeft() {

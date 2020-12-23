@@ -13,8 +13,8 @@
 
 
 #define DEFAULT_Y_OFFSET 3 * 32 //default offset hides 3 invisible rows used for piece spawning
-#define Y_OFFSET 3 * 32
-#define X_OFFSET 3 * 32
+#define Y_OFFSET 3 * 32 //board's Y offset on the screen
+#define X_OFFSET 3 * 32 //board's X offset on the screen
 
 class Board : public sf::Drawable, sf::Transformable {
 private:

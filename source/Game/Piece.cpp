@@ -42,7 +42,7 @@ void Piece::setShapes(Point* newShapes) {
 }
 
 void Piece::setCurrentShape() {
-    //setting four sprites to the desired shape
+    //setting four sprites to the shape determined by rotation field
     for (int i = 0; i < 4; i++) {
         this->shape[i] = shapes[rotation][i];
     }
@@ -63,9 +63,12 @@ const Point Piece::getPiecePosition() const {
 }
 
 void Piece::setPiecePosition(int x, int y, bool fixedToBoard) {
+    //set piece's position
     Piece::piecePosition.setX(x);
     Piece::piecePosition.setY(y);
+    //set sprites' positions, depending on the fixedToBoard parameter
     for (int i = 0; i < 4; i++) {
+        // if fixedToBoard, use coordinates relative to the game board's beginning
         if (fixedToBoard)
             tileSprite[i].setPosition((piecePosition.getX() + shape[i].getX()) * 32 + X_OFFSET,
                                       (piecePosition.getY() + shape[i].getY()) * 32 + Y_OFFSET - DEFAULT_Y_OFFSET
@@ -87,6 +90,7 @@ void Piece::setPiecePosition(Point x) {
 }
 
 void Piece::rotateLeft() {
+    //calculate next left rotation
     int nextRotation = this->rotation - 1;
     if (nextRotation < 0) {
         nextRotation = 3;
@@ -97,6 +101,7 @@ void Piece::rotateLeft() {
 }
 
 void Piece::rotateRight() {
+    //calculate next right rotation
     int nextRotation = (this->rotation + 1) % 4;
     setRotation(nextRotation);
     setCurrentShape();
@@ -108,7 +113,10 @@ int Piece::getRotation() const {
 }
 
 void Piece::setRotation(int rotation) {
-    Piece::rotation = rotation;
+    if (rotation >= 0 && rotation < 4)
+        Piece::rotation = rotation;
+    else
+        Piece::rotation = 0;
 }
 
 Point *Piece::getCurrentShape() {

@@ -36,7 +36,7 @@ public:
     /// Set both coordinates.
     void setPos(int x, int y);
 
-    /// Print the point to stdout.
+    /// Print the point's coordinates to stdout.
     void print();
 };
 

@@ -7,7 +7,8 @@
 bool Board::init(std::string tileset, int tileSize) {
     tilesetPtr = resourceManager->getTexture(tileset);
 
-    //set offset
+    //set offset, DEFAULT_Y_OFFSET is subtracted from Y coordinate to even 3 top rows of the board, which are not draw
+    //but are used to spawn each piece.
     this->setPosition(X_OFFSET, -DEFAULT_Y_OFFSET + Y_OFFSET);
 
     //resize the vertex array
@@ -58,6 +59,9 @@ bool Board::collidesWith(int x, int y, Point *shape) {
 }
 
 bool Board::add(Piece *piece) {
+    //for every point of the piece's shape, add the point to the board
+    //if point we are adding is in the spawning zone (Y less than 3), return true
+    //returning true means the game is over
     for (int i = 0; i < 4; i++) {
         if (piece->getPiecePosition().getY() + piece->getCurrentShape()[i].getY() < 3)
             return true;
@@ -67,21 +71,24 @@ bool Board::add(Piece *piece) {
     return false;
 }
 
-void Board::updateTexture(Point piecePos, Point shapePoint, int tileNumber, int tileSize) {
+void Board::updateTexture(Point piecePos, Point shapePoint, int shapeInt, int tileSize) {
+    //update the texture of the board's single tile.
     sf::Vertex* quad = &vertices[(piecePos.getX() + shapePoint.getX() + (piecePos.getY() + shapePoint.getY())* this->boardWidth) * 4];
-    quad[0].texCoords = sf::Vector2f(tileNumber * tileSize, 0);
-    quad[1].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, 0);
-    quad[2].texCoords = sf::Vector2f((tileNumber + 1) * tileSize, tileSize);
-    quad[3].texCoords = sf::Vector2f(tileNumber * tileSize, tileSize);
+    quad[0].texCoords = sf::Vector2f(shapeInt * tileSize, 0);
+    quad[1].texCoords = sf::Vector2f((shapeInt + 1) * tileSize, 0);
+    quad[2].texCoords = sf::Vector2f((shapeInt + 1) * tileSize, tileSize);
+    quad[3].texCoords = sf::Vector2f(shapeInt * tileSize, tileSize);
 }
 
 int Board::updateBoard() {
     bool foundFullRow = true;
     int lineCounter = 0;
 
+    //beginning from the bottom, get all full rows, and remove them by pushing the board down by one row.
     for (int y = this->boardHeight - 2; y > 0; y--) {
         foundFullRow = true;
         for (int x = 1; x < this->boardWidth - 1; x++) {
+            //if any of the row's column is empty, the row isn't full
             if (board[x][y] == 0)
                 foundFullRow = false;
         }
@@ -95,6 +102,7 @@ int Board::updateBoard() {
 }
 
 void Board::pushRowDown(int row) {
+    //pushes all the rows above the removed row down, then updates the textures depending on the board's state.
     for (int y = row; y > 0; y--) {
         for (int x = 1; x < this->boardWidth - 1; x++) {
             board[x][y] = board[x][y - 1];
@@ -105,7 +113,8 @@ void Board::pushRowDown(int row) {
 
 void Board::updateAllTextures(int tileSize) {
     for (int i = 0; i < this->boardWidth; i++) {
-        //editing j here modifies the number of visible walls, default is 3 rows for piece spawning
+        //editing j here modifies the number of visible walls, default is 3 rows for piece spawning.
+        //DEFAULT_Y_OFFSET is used here to skip drawing few top rows used only for piece spawning.
         for (int j = DEFAULT_Y_OFFSET / 32; j < this->boardHeight; j++) {
             //get the tileNumber
             int tileNumber = board[i][j];

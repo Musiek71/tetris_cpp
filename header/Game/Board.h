@@ -71,25 +71,95 @@ private:
      */
     void updateTexture(Point piecePos, Point shapePoint, int shapeInt, int tileSize);
 
-
+    /**
+     * Updates all the textures of the board.
+     *
+     * Iterates through all the vertices in the vertices field and updates every quad's positions (crucial for proper drawing)
+     * and used texture's position in the tileset, depending on shapeInt read from the board 2D array.
+     *
+     * @param tileSize Size of a single tile on a tileset texture.
+     */
     void updateAllTextures(int tileSize);
 
 public:
+    /**
+     * Main Board constructor.
+     *
+     * The main constructor, allocates the board's memory and initializes it with walls and empty spaces from PieceEnum.
+     *
+     * @param boardWidth The board's width, including the side walls.
+     * @param boardHeight The board's height, including the top piece spawning rows and bottom wall row.
+     * @param resourceManager Pointer to the program's resource manager.
+     */
     Board(int boardWidth, int boardHeight, ResourceManager* resourceManager);
 
+    /**
+     * Board's main destructor.
+     *
+     * Frees the memory allocated for the board.
+     */
     virtual ~Board();
 
-    bool init(std::string tileset, int tileSize);
+    /**
+     * Initialization of the board.
+     *
+     * Creates the vertex array representing the board in SFML library. Gets the texture from the main resource
+     * manager using the tileset parameter, then adds a texture rectangle to every quad of the vertex array using
+     * the UpdateAllTextures method.
+     *
+     * @param tileset Name of the tileset texture.
+     * @param tileSize Size of a single tile on a tileset texture.
+     */
+    void init(std::string tileset, int tileSize);
 
+    /**
+     * Main collision checking method.
+     *
+     * Checks, whether the piece at certain coordinates collides/would collide with pieces already existing on the board (or walls).
+     * It takes absolute x and y values (position), and then checks every point of the shape.
+     * Returns true, if any of the point collides with existing board.
+     * Returns false, if none of the points collides.
+     *
+     * @param x The absolute x position of the piece on the board.
+     * @param y The absolute y positison of the piece on the board.
+     * @param shape The Point array containing the current shape of the piece.
+     * @return True if collides, otherwise false.
+     */
     bool collidesWith(int x, int y, Point* shape);
 
+    /**
+     * Adds a single piece to the board.
+     *
+     * Adds the piece to the board, using its coordinates, then updates the board's texture.
+     * Returns, whether the game is over - the Y position of any of the piece's points is less than 3 (rows intended
+     * for piece spawning).
+     * Returns false, if game's over (piece was added in the illegal zone).
+     * Returns true, if piece was added successfully.
+     *
+     * @param piece The piece to add to the board.
+     * @return True if piece was added successfully, false if game's over.
+     */
     bool add(Piece *piece);
 
+    /**
+     * Updates the board, clearing all full rows.
+     *
+     * Updates the board, beginning from the very bottom of the board. Searches for any full rows and when found,
+     * increases the cleared rows counter and pushes the board one row down (removing the counted full row).
+     *
+     * @return The number of cleared full rows.
+     */
     int updateBoard();
 
+    /**
+     * Pushes all the rows above the removed row down, then updates the textures depending on the board's state.
+     *
+     * @param row The number of the row to be removed/pushed down/cleared.
+     */
     void pushRowDown(int row);
 
 protected:
+    /// Implementation of the SFML's draw interface.
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
 

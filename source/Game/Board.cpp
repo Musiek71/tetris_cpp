@@ -4,7 +4,7 @@
 
 #include "../../header/Game/Board.h"
 
-bool Board::init(std::string tileset, int tileSize) {
+void Board::init(std::string tileset, int tileSize) {
     tilesetPtr = resourceManager->getTexture(tileset);
 
     //set offset, DEFAULT_Y_OFFSET is subtracted from Y coordinate to even 3 top rows of the board, which are not draw
@@ -16,9 +16,7 @@ bool Board::init(std::string tileset, int tileSize) {
     vertices.resize(this->boardWidth * this->boardHeight * 4);
 
     //initializing textures
-    updateAllTextures(32);
-
-    return true;
+    updateAllTextures(tileSize);
 }
 
 void Board::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -50,8 +48,10 @@ Board::Board(int boardWidth, int boardHeight, ResourceManager* resourceManager) 
 }
 
 bool Board::collidesWith(int x, int y, Point *shape) {
+    // each 4 points of the shape
     for (int i = 0; i < 4; i++) {
-        if (this->board[x + shape[i].getX()][y + shape[i].getY()] != 0) {
+        // if any of the point the piece is going to be located isn't free, return true
+        if (this->board[x + shape[i].getX()][y + shape[i].getY()] != NONE) {
             return true;
         }
     }
@@ -60,15 +60,17 @@ bool Board::collidesWith(int x, int y, Point *shape) {
 
 bool Board::add(Piece *piece) {
     //for every point of the piece's shape, add the point to the board
-    //if point we are adding is in the spawning zone (Y less than 3), return true
-    //returning true means the game is over
+    //if point we are adding is in the spawning zone (Y less than 3), return false
+    //returning false means the game is over
     for (int i = 0; i < 4; i++) {
         if (piece->getPiecePosition().getY() + piece->getCurrentShape()[i].getY() < 3)
-            return true;
+            return false;
+        //update the board with piece's shape
         board[piece->getPiecePosition().getX() + piece->getCurrentShape()[i].getX()][piece->getPiecePosition().getY() + piece->getCurrentShape()[i].getY()] = piece->getCurrentShapeInt();
+        //update the board's textures
         updateTexture(piece->getPiecePosition(), piece->getCurrentShape()[i], piece->getCurrentShapeInt(), 32);
     }
-    return false;
+    return true;
 }
 
 void Board::updateTexture(Point piecePos, Point shapePoint, int shapeInt, int tileSize) {

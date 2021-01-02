@@ -12,6 +12,8 @@ int main() {
     //TODO logo on the main screen
     //TODO throw out crucial functions from class constructors so you don't have to create new objects every time you leave menu
 
+    //TODO change the controls
+
     int volume = 0;
     int score = 0;
     int level = 1;

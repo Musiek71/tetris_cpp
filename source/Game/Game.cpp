@@ -6,6 +6,7 @@
 
 Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volume, int* gameStatePtr, int* scorePtr,
            int* levelPtr, bool ghostFlag, ResourceManager* resourceManager) {
+    //checking the correctness of the width and height of the board
     if (boardWidth >= 5)
         this->boardWidth = boardWidth + 2; //side walls
     else
@@ -15,11 +16,14 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
     else
         this->boardHeight = 10 + 4;
 
+    //setting the resourceManager pointer field
     this->resourceManager = resourceManager;
 
+    //getting the board and the piece factory
     this->gameBoard = new Board(this->boardWidth, this->boardHeight, resourceManager);
     this->pieceFactory = new PieceFactory(this->boardWidth / 2 - 2, this->resourceManager);
 
+    //setting all the pointers
     this->window = window;
     this->volume = volume;
     this->gameStatePtr = gameStatePtr;
@@ -27,8 +31,10 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
     this->levelPtr = levelPtr;
     this->ghostFlag = ghostFlag;
 
+    //getting the font from the resource manager
     textFontPtr = resourceManager->getFont("gbfont.ttf");
 
+    //setting the Paused text in the window's center
     this->pausedText.setFont(*textFontPtr);
     this->pausedText.setCharacterSize(48);
     this->pausedText.setString("Paused");
@@ -36,26 +42,31 @@ Game::Game(sf::RenderWindow* window, int boardWidth, int boardHeight, float volu
                                  window->getSize().y / 2 - pausedText.getCharacterSize() / 2);
 }
 
-bool Game::run() {
+void Game::run() {
 
+    //initializing the board
     gameBoard->init("tileset.png", 32);
 
+    //setting the window's size
     window->setSize(sf::Vector2u((boardWidth + 13) * 32, boardHeight * 32));
 
+    //fixing the window's gameview
     sf::View gameView(sf::FloatRect(0, 0, (boardWidth + 13) * 32, boardHeight * 32));
     window->setView(gameView);
 
+    //setting the background
     sf::Sprite background;
     sf::Texture* backgroundText = resourceManager->getTexture("background.png");
     background.setTexture(*backgroundText);
     background.setScale((float)window->getSize().x / backgroundText->getSize().x, (float)window->getSize().y / backgroundText->getSize().y );
 
-
+    //getting all the pieces using the pieceFactory
     Piece* currentPiece = pieceFactory->getPiece();
     Piece* nextPiece = pieceFactory->getPiece();
     Piece* ghostPiece = pieceFactory->getGhostPiece(currentPiece);
     setGhostPosition(currentPiece, ghostPiece);
 
+    //setting the scoreboard
     ScoreBoard scoreBoard("score_field.png",
                           "gbfont.ttf",
                           resourceManager,
@@ -67,6 +78,7 @@ bool Game::run() {
     scoreBoard.setLevel(this->level);
     scoreBoard.setScore(this->score);
 
+    //setting the nextBoard
     NextBoard nextBoard("next_field.png",
                         resourceManager,
                         nextPiece,
@@ -74,42 +86,45 @@ bool Game::run() {
                         1* 32,
                         32);
 
+    //setting the fall sound
     sf::SoundBuffer* fallSoundBuffer = resourceManager->getSoundBuffer("fall.wav");
     sf::Sound fallSound;
     fallSound.setBuffer(*fallSoundBuffer);
     fallSound.setVolume(this->volume);
 
+    //setting the clear sound
     sf::SoundBuffer* clearedSoundBuffer = resourceManager->getSoundBuffer("clear.wav");
     sf::Sound clearedSound;
     clearedSound.setBuffer(*clearedSoundBuffer);
     clearedSound.setVolume(this->volume);
 
+    //setting the main music
     sf::Music* music = resourceManager->getMusic("tetris.ogg");
     music->setVolume(this->volume);
     music->setLoop(true);
     music->play();
 
-
-
-    float deltaTime = 0;
-
+    //setting game flags
     bool fastFallFlag = false;
     bool pausedFlag = false;
 
+    //setting clocks used for game's time counting
     sf::Clock frameClock;
     sf::Clock keyClock;
     sf::Time frameTime = frameClock.getElapsedTime();
     sf::Time keyTime = keyClock.getElapsedTime();
 
+    //main game loop
     while (window->isOpen()) {
 
+        //entering main menu
         if (*gameStatePtr == MENU) {
             music->stop();
             break;
         }
 
+        //game over
         if (gameOver) {
-
             *gameStatePtr = GAMEOVER;
             *levelPtr = level;
             *scorePtr = score;
@@ -123,6 +138,7 @@ bool Game::run() {
             break;
         }
 
+        //event handling
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -143,8 +159,9 @@ bool Game::run() {
             }
         }
 
+        //event handling for continuuous key entering
+        //allows to achieve more smooth game input
         keyTime = keyClock.getElapsedTime();
-
         if (!pausedFlag) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
                 fastFallFlag = true;
@@ -158,6 +175,7 @@ bool Game::run() {
             }
         }
 
+        //main SFML window drawing sequence
         window->clear();
         window->draw(background);
         window->draw(nextBoard);
@@ -170,9 +188,9 @@ bool Game::run() {
             window->draw(pausedText);
         window->display();
 
-
+        //main game condition system, falling of the pieces
         frameTime = frameClock.getElapsedTime();
-        if (!pausedFlag && (fastFallFlag | (frameTime.asSeconds() - deltaTime > 0.5 - (level - 1) * 0.025))) {
+        if (!pausedFlag && (fastFallFlag | (frameTime.asSeconds() > 0.5 - (level - 1) * 0.025))) {
             frameClock.restart();
 
             //if fast falling, increment the score
@@ -181,7 +199,7 @@ bool Game::run() {
 
             if (!fallDown(currentPiece)) {
                 fallSound.play();
-                gameOver = gameBoard->add(currentPiece);
+                gameOver = !gameBoard->add(currentPiece);
 
                 delete currentPiece;
                 delete ghostPiece;
@@ -217,17 +235,18 @@ bool Game::run() {
             scoreBoard.setLevel(this->level);
         }
     }
-
-    return true;
 }
 
 bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
+    //if piece's not colliding with anything in the position moved by one to left on the board
     if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX() - 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
             ) {
+        //set the new position on the board
         piece->setPiecePosition(piece->getPiecePosition().getX() - 1, piece->getPiecePosition().getY());
+        //correct the position of the piece's ghost
         setGhostPosition(piece, ghostPiece);
         return true;
     }
@@ -235,12 +254,15 @@ bool Game::moveLeft(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::moveRight(Piece *piece, Piece* ghostPiece) {
+    //if piece's not colliding with anything in the position moved by one to right on the board
     if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX() + 1,
             piece->getPiecePosition().getY(),
             piece->getCurrentShape())
             ) {
+        //set the new position on the board
         piece->setPiecePosition(piece->getPiecePosition().getX() + 1, piece->getPiecePosition().getY());
+        //correct the position of the piece's ghost
         setGhostPosition(piece, ghostPiece);
         return true;
     }
@@ -248,12 +270,15 @@ bool Game::moveRight(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::rotateLeft(Piece *piece, Piece* ghostPiece) {
+    //if piece's not colliding with anything in the position rotated left on the board
     if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getLeftRotationShape())
             ) {
+        //rotate the piece to the left
         piece->rotateLeft();
+        //correct the position of the piece's ghost
         setGhostPosition(piece, ghostPiece);
         return true;
     }
@@ -261,12 +286,15 @@ bool Game::rotateLeft(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::rotateRight(Piece *piece, Piece* ghostPiece) {
+    //if piece's not colliding with anything in the position rotated right on the board
     if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY(),
             piece->getRightRotationShape())
             ) {
+        //rotate the piece to the right
         piece->rotateRight();
+        //correct the position of the piece's ghost
         setGhostPosition(piece, ghostPiece);
         return true;
     }
@@ -274,11 +302,13 @@ bool Game::rotateRight(Piece *piece, Piece* ghostPiece) {
 }
 
 bool Game::fallDown(Piece *piece) {
+    //if piece's fallen position doesn't collide with anything on the board
     if (!gameBoard->collidesWith(
             piece->getPiecePosition().getX(),
             piece->getPiecePosition().getY() + 1,
             piece->getCurrentShape())
             ) {
+        //lower the piece's position by one
         piece->setPiecePosition(piece->getPiecePosition().getX(), piece->getPiecePosition().getY() + 1);
         return true;
     }
@@ -301,6 +331,7 @@ void Game::setGhostPosition(Piece *currentPiece, Piece* ghostPiece) {
 }
 
 void Game::updateScore(int clearedRows) {
+    //increase the score depending on the number of cleared rows
     switch (clearedRows) {
         case 1:
             this->score += 40 * this->level;

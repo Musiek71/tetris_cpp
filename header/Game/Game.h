@@ -17,6 +17,8 @@
 
 /**
  * The Game class implementing a single game of tetris. Sews the whole game implementation together.
+ *
+ * A single state of the game.
  */
 class Game {
 private:

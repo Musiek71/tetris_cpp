@@ -48,7 +48,7 @@ Leaderboard::Leaderboard(sf::RenderWindow *window, string filename, int *gameSta
             //Create a new stringstream to parse text file's line to the Score class
             stringstream ss(line);
             string nick;
-            long score;
+            int score;
             ss >> nick >> score;
             scores.push_back(new Score(nick, score, textFontPtr));
         }

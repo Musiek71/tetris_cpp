@@ -5,7 +5,7 @@
 #include "../../header/Menu/Score.h"
 
 
-Score::Score(const std::string &nick, long score, sf::Font* font) {
+Score::Score(const std::string &nick, int score, sf::Font* font) {
     this->nick = nick;
     this->score = score;
     nickText.setFont(*font);

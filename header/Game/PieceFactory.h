@@ -24,6 +24,7 @@
  * The Piece Factory class implementing a simple factory pattern.
  *
  * Used to spawn random pieces on the board in a sequence.
+ * All the pieces in the game are spawned through the Piece Factory.
  */
 class PieceFactory {
 

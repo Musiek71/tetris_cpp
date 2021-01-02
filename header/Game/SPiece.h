@@ -9,6 +9,9 @@
 #include "Point.h"
 #include "Piece.h"
 
+/**
+ * Class representing the S piece/tetromino, deriving after Piece class.
+ */
 class SPiece : public Piece {
     static Point points[4][4];
 public:

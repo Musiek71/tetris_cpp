@@ -21,6 +21,9 @@
 /// X offset of the board on the screen
 #define X_OFFSET 3 * 32 //board's X offset on the screen
 
+/**
+ * Class representing the game board.
+ */
 class Board : public sf::Drawable, sf::Transformable {
 private:
     /// Width of the game board.
@@ -82,6 +85,7 @@ private:
     void updateAllTextures(int tileSize);
 
 public:
+
     /**
      * Main Board constructor.
      *

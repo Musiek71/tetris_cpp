@@ -144,11 +144,11 @@ void Game::run() {
             if (event.type == sf::Event::Closed)
                 window->close();
             else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Z) {
+                if (event.key.code == sf::Keyboard::Up) {
                     if (!pausedFlag)
                         rotateLeft(currentPiece, ghostPiece);
                 }
-                else if (event.key.code == sf::Keyboard::X) {
+                else if (event.key.code == sf::Keyboard::Down) {
                     if (!pausedFlag)
                         rotateRight(currentPiece, ghostPiece);
                 }
@@ -163,7 +163,7 @@ void Game::run() {
         //allows to achieve more smooth game input
         keyTime = keyClock.getElapsedTime();
         if (!pausedFlag) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && keyTime.asSeconds() > 0.04) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && keyTime.asSeconds() > 0.04) {
                 fastFallFlag = true;
                 keyClock.restart();
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && keyTime.asSeconds() > 0.09) { //0.08

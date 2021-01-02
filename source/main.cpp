@@ -7,14 +7,7 @@
 
 int main() {
 
-    //TODO unite all the pointers as a structure to clean up
-    //TODO button textures
-    //TODO logo on the main screen
-    //TODO throw out crucial functions from class constructors so you don't have to create new objects every time you leave menu
-
-    //TODO change the controls
-
-    int volume = 0;
+    int volume = 50;
     int score = 0;
     int level = 1;
     int boardWidth = 10;

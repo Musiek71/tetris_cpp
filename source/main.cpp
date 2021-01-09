@@ -7,7 +7,7 @@
 
 int main() {
 
-    int volume = 50;
+    int volume = 10;
     int score = 0;
     int level = 1;
     int boardWidth = 10;
@@ -20,7 +20,7 @@ int main() {
 
     ResourceManager resourceManager;
 
-    Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag, &resourceManager);
+
 
 
     while (window.isOpen()) {
@@ -29,6 +29,7 @@ int main() {
 
         switch (gameState) {
             case MENU: {
+                Menu menu(&window, &boardWidth, &boardHeight, &volume, &gameState, &ghostFlag, &resourceManager);
                 menu.run();
                 break;
                }

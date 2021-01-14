@@ -20,9 +20,6 @@ int main() {
 
     ResourceManager resourceManager;
 
-
-
-
     while (window.isOpen()) {
         if (gameState == EXIT)
             break;

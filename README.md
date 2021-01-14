@@ -2,12 +2,12 @@
 
 Tetris clone written in C++ using SFML library as a univeristy project.
 
-##Includes:
+## Includes:
 * Ability to resize the game board
 * Functional scoreboard
 * Great music!
 
-##Controls:
+## Controls:
 * Left/right arrows - piece moving
 * Up/down arrows - piece rotation
 * Space - fast fall

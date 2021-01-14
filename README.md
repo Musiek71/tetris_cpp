@@ -1,4 +1,4 @@
-## Tetris
+# Tetris
 
 Tetris clone written in C++ using SFML library as a univeristy project.
 

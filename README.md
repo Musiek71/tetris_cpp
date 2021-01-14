@@ -15,7 +15,7 @@ Tetris clone written in C++ using SFML library as a univeristy project.
 
 **Have fun!**
 
-##Screenshots:
+## Screenshots:
 ![Gameplay](https://i.imgur.com/xzO68aH.png)
 
 ![Gameplay](https://i.imgur.com/MpsTnz4.png)

@@ -3,7 +3,7 @@
 Tetris clone written in C++ using SFML library as a univeristy project.
 
 ## Documentation
-Code documentation can be found [here](https://github.com/mherda64/tetris_cpp).
+Code documentation can be found [here](https://mherda64.github.io/tetris_cpp/).
 
 ## Includes:
 * Ability to resize the game board
